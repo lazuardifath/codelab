@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Modul 01 · Fondasi Flutter · UNIMUGO CodeLab</title>
+  <link rel="stylesheet" href="../../../assets/css/style.css">
+  <link rel="stylesheet" href="../../../assets/css/components.css">
+  <link rel="stylesheet" href="../../../assets/css/responsive.css">
+</head>
+<body class="module-page" data-base="../../../">
+<div id="app"></div>
+<div class="content-page">
+
+  <div class="module-header">
+    <div class="breadcrumb">
+      <a href="../../../index.html">Home</a> /
+      <a href="../index.html">Pemrograman Mobile</a> /
+      Modul 01
+    </div>
+    <span class="pill">Practical · 150 menit</span>
+    <h1>Fondasi Flutter dan Kesiapan Environment</h1>
+    <p class="muted">Memahami Dart, ekosistem mobile, konsep Flutter, dan menyiapkan lingkungan kerja sebelum memulai pengembangan aplikasi.</p>
+  </div>
+
+  <main>
+
+    <h2>A. Identitas Praktikum</h2>
+    <p>
+      <strong>Pertemuan:</strong> 1 &middot;
+      <strong>Durasi:</strong> 150 menit &middot;
+      <strong>Prasyarat:</strong> Mengenal konsep variabel, kondisi, dan perulangan dari mata kuliah Dasar Pemrograman.
+    </p>
+    <div class="callout">
+      <strong>Kebijakan akademik.</strong> Selesaikan bagian Dart Dasar secara mandiri menggunakan
+      <a href="https://dartpad.dev" target="_blank">DartPad</a>.
+      Jangan menggunakan AI untuk menulis jawaban latihan &mdash; pemahaman Dart diuji melalui asesmen daring tertutup.
+    </div>
+
+    <h2>B. Capaian Pembelajaran</h2>
+    <p>Setelah menyelesaikan modul ini, mahasiswa mampu:</p>
+    <ul>
+      <li>Menggunakan <code>var</code>, <code>final</code>, dan <code>const</code> dengan benar serta menjelaskan perbedaannya.</li>
+      <li>Menerapkan null safety Dart menggunakan operator <code>?</code> dan <code>??</code>.</li>
+      <li>Membuat fungsi dengan named parameter dan class sederhana di Dart.</li>
+      <li>Menjelaskan perbedaan native, hybrid, dan cross-platform serta kapan memilih masing-masing.</li>
+      <li>Menjelaskan arsitektur Flutter: framework, engine, dan platform embedder.</li>
+      <li>Membedakan <code>StatelessWidget</code> dan <code>StatefulWidget</code> dan menerapkan <code>setState()</code>.</li>
+      <li>Menyiapkan dan memverifikasi Flutter SDK, Android SDK, VS Code, dan Git.</li>
+      <li>Menjalankan aplikasi Flutter pertama pada emulator atau perangkat fisik.</li>
+      <li>Menyimpan project ke repository dengan <code>.gitignore</code> yang benar.</li>
+    </ul>
+
+    <h2>C. Pengantar</h2>
+    <p>
+      Program studi TI membutuhkan mahasiswa yang dapat membangun aplikasi untuk lebih dari satu platform.
+      Flutter dipelajari karena memungkinkan satu basis kode menghasilkan aplikasi Android, iOS, dan web sekaligus.
+      Sebelum membangun antarmuka, ada dua fondasi yang wajib dikuasai terlebih dahulu: bahasa Dart sebagai
+      fondasi sintaks, dan lingkungan kerja yang dapat diverifikasi dan berjalan tanpa masalah.
+    </p>
+    <p>
+      Modul ini tidak bisa dilewati. Jika environment belum berjalan dengan benar, seluruh praktikum berikutnya
+      akan terhenti di tengah jalan.
+    </p>
+
+    <h2>D. Instalasi Tools</h2>
+    <p>Ikuti langkah berikut secara berurutan. Jangan melompat ke Flutter sebelum Git terpasang.</p>
+
+    <h3>1. Git</h3>
+    <ol>
+      <li>Buka <a href="https://git-scm.com/download/win" target="_blank">git-scm.com/download/win</a> dan unduh installer 64-bit.</li>
+      <li>Jalankan installer. Pilih opsi default di setiap langkah &mdash; tidak perlu mengubah apapun.</li>
+      <li>Buka terminal baru (Command Prompt atau PowerShell) dan verifikasi:</li>
+    </ol>
+    <pre><code>git --version</code></pre>
+    <p>Jika muncul versi seperti <code>git version 2.x.x</code>, Git sudah terpasang dengan benar.</p>
+
+    <h3>2. Flutter SDK</h3>
+    <ol>
+      <li>Buka <a href="https://docs.flutter.dev/get-started/install/windows/mobile" target="_blank">docs.flutter.dev</a> dan unduh Flutter SDK versi <strong>stable</strong> terbaru.</li>
+      <li>Ekstrak ke <code>C:\flutter</code>. Hindari folder yang mengandung spasi seperti <code>C:\Program Files</code>.</li>
+      <li>
+        Tambahkan <code>C:\flutter\bin</code> ke PATH sistem:
+        <ul>
+          <li>Tekan <kbd>Win + R</kbd>, ketik <code>sysdm.cpl</code>, tekan Enter.</li>
+          <li>Buka tab <strong>Advanced</strong> &rarr; klik <strong>Environment Variables</strong>.</li>
+          <li>Pada bagian <em>System Variables</em>, pilih baris <strong>Path</strong> &rarr; klik <strong>Edit</strong> &rarr; klik <strong>New</strong>.</li>
+          <li>Ketik <code>C:\flutter\bin</code> &rarr; OK di semua jendela yang terbuka.</li>
+        </ul>
+      </li>
+      <li>Tutup semua terminal yang sedang buka, lalu buka terminal baru dan verifikasi:</li>
+    </ol>
+    <pre><code>flutter --version</code></pre>
+
+    <h3>3. Visual Studio Code</h3>
+    <ol>
+      <li>Unduh dari <a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a> dan instal dengan opsi default.</li>
+      <li>Buka VS Code &rarr; panel Extensions dengan <kbd>Ctrl+Shift+X</kbd>.</li>
+      <li>Cari dan instal ekstensi bernama <strong>Flutter</strong>. Ekstensi Dart akan ikut terpasang otomatis.</li>
+    </ol>
+    <p>
+      Setelah ekstensi terpasang, VS Code dapat menjalankan aplikasi Flutter, memberikan autocomplete Dart,
+      mendeteksi error sebelum kode dikompilasi, dan menampilkan widget documentation saat hover.
+    </p>
+
+    <h3>4. Android Studio dan emulator</h3>
+    <ol>
+      <li>Unduh dari <a href="https://developer.android.com/studio" target="_blank">developer.android.com/studio</a> dan instal dengan opsi default.</li>
+      <li>Buka Android Studio &rarr; <strong>SDK Manager</strong> &rarr; pastikan <strong>Android SDK</strong> dan <strong>Android SDK Command-line Tools</strong> tercentang &rarr; Apply.</li>
+      <li>Buka <strong>Device Manager</strong> &rarr; <strong>Create Virtual Device</strong> &rarr; pilih <em>Pixel 6</em> &rarr; pilih system image <em>API 34</em> &rarr; Finish.</li>
+      <li>Klik tombol Play pada virtual device yang baru dibuat untuk menjalankan emulator.</li>
+    </ol>
+    <p>
+      <strong>Menggunakan perangkat fisik (opsional):</strong> aktifkan <em>Developer Options</em> di pengaturan Android
+      (biasanya dengan mengetuk <em>Build Number</em> tujuh kali), nyalakan <em>USB Debugging</em>,
+      hubungkan kabel data ke komputer, lalu izinkan debugging saat dialog muncul di layar perangkat.
+    </p>
+
+    <h2>E. Dart Dasar</h2>
+    <p>
+      Semua kode Flutter ditulis dalam Dart. Kuasai bagian ini sebelum membaca kode Flutter
+      karena sintaks ini akan muncul berulang kali tanpa penjelasan ulang di modul berikutnya.
+      Gunakan <a href="https://dartpad.dev" target="_blank">DartPad</a> untuk mencoba semua contoh
+      tanpa perlu Flutter terpasang.
+    </p>
+
+    <h3>var, final, dan const</h3>
+    <pre><code>void main() {
+  var nama = 'Budi';         // tipe disimpulkan otomatis sebagai String
+  nama = 'Siti';              // boleh diubah
+
+  final nim = '2024001';      // diinisialisasi sekali, tidak bisa diubah lagi
+  // nim = '2024002';         // error: nilai final tidak dapat diubah
+
+  const appName = 'UNIMUGO'; // tetap sejak kompilasi, paling efisien untuk nilai konstan
+  print('$appName - $nim - $nama');
+}</code></pre>
+    <p>
+      Gunakan <code>const</code> untuk nilai yang benar-benar tetap dan diketahui saat kompilasi.
+      Gunakan <code>final</code> untuk nilai yang ditetapkan satu kali saat runtime.
+      Gunakan <code>var</code> hanya jika nilainya memang perlu berubah.
+    </p>
+
+    <h3>Tipe data dan null safety</h3>
+    <pre><code>void main() {
+  String judul = 'Workshop Flutter';
+  int semester = 4;
+  double ipk = 3.75;
+  bool aktif = true;
+
+  // Tanda ? berarti variabel boleh bernilai null
+  String? email;            // belum diisi, nilainya null
+  print(email);             // null
+
+  email = 'budi@unimugo.ac.id';
+  print(email);             // budi@unimugo.ac.id
+
+  // Operator ?? : gunakan nilai kanan jika nilai kiri null
+  String tampilEmail = email ?? 'Email belum diisi';
+  print(tampilEmail);
+
+  // String interpolation: $variabel atau ${ekspresi}
+  print('$judul - Semester $semester - IPK: $ipk');
+  print('Status: ${aktif ? "Aktif" : "Tidak aktif"}');
+}</code></pre>
+    <p>
+      Null safety mencegah error umum: mengakses nilai yang belum diinisialisasi.
+      Dart mengharuskan kode secara eksplisit menyatakan apakah sebuah variabel bisa bernilai null
+      atau tidak, sehingga banyak bug dapat ditangkap sebelum aplikasi dijalankan.
+    </p>
+
+    <h3>Fungsi dan named parameter</h3>
+    <pre><code>// Fungsi biasa dengan tipe eksplisit
+int tambah(int a, int b) {
+  return a + b;
+}
+
+// Arrow function untuk fungsi satu ekspresi
+String sapa(String nama) => 'Halo, $nama!';
+
+// Named parameters: ditulis dalam {} dan dipanggil dengan nama
+// required = wajib diisi, tanpa default value
+// Tanpa required = opsional, harus ada default value
+void cetakAgenda({
+  required String judul,
+  String lokasi = 'Kampus UNIMUGO',
+}) {
+  print('$judul &middot; $lokasi');
+}
+
+void main() {
+  print(tambah(3, 4));                    // 7
+  print(sapa('Budi'));                    // Halo, Budi!
+
+  cetakAgenda(judul: 'Workshop Git');
+  cetakAgenda(judul: 'Seminar AI', lokasi: 'Auditorium');
+}</code></pre>
+    <p>
+      Named parameter banyak digunakan di Flutter &mdash; hampir setiap widget menggunakan pola ini.
+      Memahaminya sekarang akan membuat kode Flutter jauh lebih mudah dibaca.
+    </p>
+
+    <h3>Class dan constructor</h3>
+    <pre><code>class Mahasiswa {
+  final String nama;
+  final String nim;
+  final int semester;
+
+  // const constructor: objek dapat dibuat saat kompilasi
+  const Mahasiswa({
+    required this.nama,
+    required this.nim,
+    required this.semester,
+  });
+
+  // Getter: properti yang dihitung dari properti lain
+  String get info => '$nama ($nim) &middot; Semester $semester';
+
+  // Method dengan return type bool
+  bool get masihAktif => semester &lt;= 8;
+}
+
+void main() {
+  const mhs = Mahasiswa(
+    nama: 'Budi Santoso',
+    nim: '2024001',
+    semester: 4,
+  );
+
+  print(mhs.info);        // Budi Santoso (2024001) &middot; Semester 4
+  print(mhs.masihAktif);  // true
+}</code></pre>
+    <p>
+      Pola class dengan <code>const</code> constructor dan named parameter adalah pola standar Flutter.
+      Setiap widget Flutter pada dasarnya adalah class seperti ini yang mewarisi <code>StatelessWidget</code>
+      atau <code>StatefulWidget</code>.
+    </p>
+
+    <h2>F. Konsep Flutter</h2>
+
+    <h3>StatelessWidget dan StatefulWidget</h3>
+    <p>Semua elemen antarmuka Flutter adalah widget. Ada dua jenis utama:</p>
+    <table>
+      <tr><th>Jenis</th><th>Kapan digunakan</th><th>Contoh penggunaan</th></tr>
+      <tr>
+        <td><code>StatelessWidget</code></td>
+        <td>Tampilan ditentukan sepenuhnya oleh data dari parent, tidak perlu berubah setelah dibuat</td>
+        <td>Label teks, kartu statis, ikon, header</td>
+      </tr>
+      <tr>
+        <td><code>StatefulWidget</code></td>
+        <td>Ada data internal yang dapat berubah akibat interaksi pengguna atau pembaruan data</td>
+        <td>Tombol toggle, counter, form, animasi</td>
+      </tr>
+    </table>
+    <pre><code>// StatelessWidget: tidak ada state internal yang berubah
+class LabelNama extends StatelessWidget {
+  final String nama;
+  const LabelNama({super.key, required this.nama});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(nama, style: const TextStyle(fontWeight: FontWeight.bold));
+  }
+}
+
+// StatefulWidget: ada nilai yang bisa berubah (nilai counter)
+class Penghitung extends StatefulWidget {
+  const Penghitung({super.key});
+
+  @override
+  State&lt;Penghitung&gt; createState() =&gt; _PenghitungState();
+}
+
+class _PenghitungState extends State&lt;Penghitung&gt; {
+  int nilai = 0; // state: nilai ini bisa berubah
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text('Nilai: $nilai'),
+        ElevatedButton(
+          // setState() memberi tahu Flutter untuk membangun ulang widget ini
+          onPressed: () =&gt; setState(() =&gt; nilai++),
+          child: const Text('Tambah'),
+        ),
+      ],
+    );
+  }
+}</code></pre>
+    <p>
+      Jangan pernah mengubah variabel state tanpa membungkusnya dalam <code>setState()</code>.
+      Tanpa <code>setState()</code>, nilai berubah di memori tetapi tampilan tidak diperbarui.
+    </p>
+
+    <h3>Widget tree dan pendekatan deklaratif</h3>
+    <p>
+      Flutter menyusun antarmuka sebagai hierarki widget. Kode mendeskripsikan tampilan berdasarkan
+      state saat ini. Ketika state berubah, Flutter membangun ulang bagian widget yang terdampak
+      &mdash; bukan seluruh halaman.
+    </p>
+    <pre><code>MaterialApp              &lt;-- konfigurasi aplikasi (tema, rute)
+ &lfloor;&mdash; Scaffold             &lt;-- struktur halaman (appBar, body)
+     &boxvr;&mdash; AppBar
+     &boxv;    &lfloor;&mdash; Text          &lt;-- judul halaman
+     &lfloor;&mdash; Padding
+          &lfloor;&mdash; Column       &lt;-- susun widget secara vertikal
+               &boxvr;&mdash; Text     &lt;-- baris pertama
+               &lfloor;&mdash; Button  &lt;-- tombol aksi</code></pre>
+
+    <h3>Arti const pada widget</h3>
+    <pre><code>// Tanpa const: Flutter membuat objek widget baru setiap kali rebuild
+Text('Judul Tetap')
+
+// Dengan const: Flutter menggunakan instance yang sama, lebih efisien
+const Text('Judul Tetap')</code></pre>
+    <p>
+      Gunakan <code>const</code> pada widget yang konfigurasinya tidak berubah.
+      VS Code akan menampilkan hint jika <code>const</code> bisa ditambahkan tapi belum ada.
+      Mengikuti saran ini adalah kebiasaan baik sejak awal.
+    </p>
+
+    <h3>pubspec.yaml</h3>
+    <p>File konfigurasi project Flutter. Setiap kali menambahkan package, ubah file ini lalu jalankan <code>flutter pub get</code>.</p>
+    <pre><code>name: unimugo_event
+description: Aplikasi agenda kegiatan program studi TI UNIMUGO.
+version: 1.0.0+1
+
+environment:
+  sdk: '&gt;=3.0.0 &lt;4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  # Contoh menambahkan aset gambar:
+  # assets:
+  #   - assets/images/logo.png</code></pre>
+
+    <h2>G. Ekosistem Mobile</h2>
+    <p>Memahami lanskap pengembangan mobile membantu menentukan teknologi yang tepat untuk proyek tertentu.</p>
+    <table>
+      <tr>
+        <th>Pendekatan</th>
+        <th>Cara kerja</th>
+        <th>Kelebihan</th>
+        <th>Pertimbangan</th>
+        <th>Contoh teknologi</th>
+      </tr>
+      <tr>
+        <td>Native</td>
+        <td>Kode dan UI khusus tiap platform</td>
+        <td>Performa optimal, akses API perangkat paling lengkap</td>
+        <td>Perlu tim atau kode terpisah per platform</td>
+        <td>Kotlin/Java (Android), Swift (iOS)</td>
+      </tr>
+      <tr>
+        <td>Hybrid</td>
+        <td>Aplikasi web berjalan dalam pembungkus native</td>
+        <td>Memanfaatkan keterampilan web yang sudah ada</td>
+        <td>Performa dan akses API perangkat terbatas</td>
+        <td>Ionic, Cordova</td>
+      </tr>
+      <tr>
+        <td>Cross-platform</td>
+        <td>Satu basis kode dikompilasi ke tiap platform</td>
+        <td>Efisiensi pengembangan, UI konsisten</td>
+        <td>Perlu memahami karakter tiap platform</td>
+        <td>Flutter, React Native, KMP</td>
+      </tr>
+    </table>
+    <p>
+      Flutter menggunakan engine rendering sendiri (Impeller/Skia) sehingga UI tampak konsisten di semua platform
+      tanpa bergantung pada komponen native. Dart dikompilasi ke kode mesin (AOT) untuk build rilis,
+      dan dijalankan dengan JIT saat pengembangan untuk mendukung hot reload.
+    </p>
+
+    <h2>H. Verifikasi Environment</h2>
+
+    <h3>Membaca output flutter doctor</h3>
+    <p>Setelah semua tools terpasang, jalankan:</p>
+    <pre><code>flutter doctor</code></pre>
+    <p>Contoh output yang diharapkan:</p>
+    <pre><code>[&checkmark;] Flutter (Channel stable, 3.x.x)
+[&checkmark;] Android toolchain - develop for Android devices
+[!] Chrome - develop for the web (dapat diabaikan jika tidak butuh target web)
+[&checkmark;] Android Studio (version 2024.x)
+[&checkmark;] VS Code (version 1.x.x)
+[&checkmark;] Connected device (1 available)</code></pre>
+    <table>
+      <tr><th>Simbol</th><th>Artinya</th><th>Tindakan</th></tr>
+      <tr><td>[&checkmark;]</td><td>Komponen siap digunakan</td><td>Tidak perlu tindakan</td></tr>
+      <tr><td>[!]</td><td>Peringatan, mungkin masih bisa lanjut</td><td>Baca pesannya &mdash; selesaikan jika berhubungan dengan target Android</td></tr>
+      <tr><td>[&cross;]</td><td>Komponen bermasalah</td><td>Wajib diselesaikan sebelum lanjut</td></tr>
+    </table>
+    <p>
+      Target minimum: baris <em>Flutter</em> dan <em>Android toolchain</em> menampilkan
+      <code>[&checkmark;]</code>, dan ada setidaknya satu connected device.
+    </p>
+
+    <h3>Troubleshooting umum</h3>
+    <table>
+      <tr><th>Pesan error</th><th>Penyebab umum</th><th>Solusi</th></tr>
+      <tr>
+        <td><code>flutter: command not found</code></td>
+        <td>PATH belum diatur atau terminal lama belum ditutup</td>
+        <td>Tutup semua terminal, buka terminal baru setelah PATH diatur</td>
+      </tr>
+      <tr>
+        <td><code>Android license not accepted</code></td>
+        <td>Lisensi Android SDK belum disetujui</td>
+        <td>Jalankan <code>flutter doctor --android-licenses</code>, ketik <kbd>y</kbd> di setiap prompt</td>
+      </tr>
+      <tr>
+        <td><code>No devices found</code></td>
+        <td>Emulator belum dibuka atau USB debugging belum aktif</td>
+        <td>Buka emulator dari Device Manager Android Studio, atau aktifkan USB debugging di perangkat</td>
+      </tr>
+      <tr>
+        <td><code>Gradle build failed</code></td>
+        <td>Koneksi internet bermasalah atau JDK tidak kompatibel</td>
+        <td>Coba jalankan ulang. Pastikan menggunakan JDK bawaan Android Studio (JDK 17)</td>
+      </tr>
+      <tr>
+        <td>Emulator sangat lambat atau lag</td>
+        <td>Hardware acceleration belum aktif</td>
+        <td>Aktifkan Intel HAXM atau Windows Hypervisor Platform di <em>Windows Features</em></td>
+      </tr>
+    </table>
+
+    <h3>Tips VS Code untuk Flutter</h3>
+    <ul>
+      <li><strong>Pilih device:</strong> klik nama device di status bar bagian bawah VS Code.</li>
+      <li><strong>Jalankan aplikasi:</strong> tekan <kbd>F5</kbd> (dengan debug) atau <kbd>Ctrl+F5</kbd> (tanpa debug, lebih cepat).</li>
+      <li><strong>Hot reload:</strong> simpan file dengan <kbd>Ctrl+S</kbd> &mdash; Flutter langsung memperbarui tampilan tanpa restart.</li>
+      <li><strong>Hot restart:</strong> klik ikon restart di toolbar debug, atau tekan <kbd>Ctrl+Shift+F5</kbd>.</li>
+      <li><strong>Lihat semua error:</strong> buka panel <em>Problems</em> dengan <kbd>Ctrl+Shift+M</kbd>.</li>
+      <li><strong>Format otomatis:</strong> <kbd>Shift+Alt+F</kbd> untuk merapikan indentasi kode Dart.</li>
+    </ul>
+
+    <h2>I. Tutorial: Aplikasi Pertama</h2>
+    <p>Bangun aplikasi UNIMUGO Event dari awal. Baca setiap komentar sebelum menyalin &mdash; komentar menjelaskan mengapa sesuatu ditulis dengan cara itu, bukan hanya apa yang dilakukannya.</p>
+
+    <h3>Langkah 1 &mdash; Buat project</h3>
+    <pre><code>flutter create unimugo_event
+cd unimugo_event</code></pre>
+    <p>
+      Perintah ini menghasilkan struktur project standar Flutter termasuk <code>.gitignore</code> yang sudah dikonfigurasi.
+      Jangan hapus file <code>.gitignore</code> tersebut.
+    </p>
+
+    <h3>Langkah 2 &mdash; Tulis aplikasi</h3>
+    <p>Buka <code>lib/main.dart</code> di VS Code, hapus semua isinya, lalu tulis kode berikut:</p>
+    <pre><code>import 'package:flutter/material.dart';
+
+// Titik masuk aplikasi. runApp() memulai widget tree.
+void main() {
+  runApp(const UnimugoEventApp());
+}
+
+// StatelessWidget: konfigurasi aplikasi tidak berubah setelah dijalankan.
+class UnimugoEventApp extends StatelessWidget {
+  const UnimugoEventApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'UNIMUGO Event',
+      theme: ThemeData(
+        colorSchemeSeed: Colors.teal,
+        useMaterial3: true,
+      ),
+      home: const EventHomePage(),
+    );
+  }
+}
+
+// Halaman utama. StatelessWidget karena tidak ada state lokal yang berubah.
+class EventHomePage extends StatelessWidget {
+  const EventHomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('UNIMUGO Event')),
+      body: const Padding(
+        padding: EdgeInsets.all(16),
+        child: EventSummaryCard(),
+      ),
+    );
+  }
+}
+
+// Widget kartu yang berdiri sendiri.
+// Memisahkan widget ke class tersendiri membuat kode lebih mudah dibaca dan diuji.
+class EventSummaryCard extends StatelessWidget {
+  const EventSummaryCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Workshop Git untuk Proyek TI',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 6),
+            const Text('Laboratorium Komputer &middot; 12 Oktober 2026'),
+            const Text('Kampus UNIMUGO'),
+            const SizedBox(height: 16),
+            FilledButton(
+              onPressed: () {
+                // Aksi dan navigasi akan ditambahkan di Modul 03
+              },
+              child: const Text('Lihat detail'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}</code></pre>
+
+    <h3>Langkah 3 &mdash; Jalankan dan amati</h3>
+    <pre><code>flutter run</code></pre>
+    <p>
+      Pilih emulator atau perangkat saat diminta. Setelah aplikasi tampil,
+      coba ubah teks judul event di kode lalu simpan &mdash; hot reload akan memperbarui tampilan
+      tanpa restart penuh. Perhatikan perbedaan kecepatan antara hot reload dan hot restart.
+    </p>
+
+    <h3>Langkah 4 &mdash; Simpan ke Git</h3>
+    <pre><code>git init
+git add .
+git commit -m "feat: setup project UNIMUGO Event"</code></pre>
+    <p>
+      Perintah <code>git add .</code> menambahkan semua file kecuali yang terdaftar di <code>.gitignore</code>.
+      Buka file <code>.gitignore</code> di VS Code dan pastikan baris <code>/build</code> dan <code>.dart_tool/</code>
+      ada di dalamnya. Ini mencegah folder hasil kompilasi ikut di-commit.
+    </p>
+
+    <h2>J. Tutorial Lanjutan: Data Dummy dan Validasi</h2>
+    <p>
+      Ubah aplikasi menjadi daftar agenda. Data disimpan sementara dalam list Dart &mdash;
+      ini disebut <em>data dummy</em>: digunakan untuk membangun dan menguji tampilan
+      sebelum aplikasi terhubung ke API atau database nyata.
+    </p>
+
+    <h3>1. Buat model data</h3>
+    <p>Buat file baru: <code>lib/models/agenda.dart</code></p>
+    <pre><code>class Agenda {
+  final String judul;
+  final String kategori;
+  final String tanggal;
+  final String lokasi;
+  final String? deskripsi; // opsional, boleh null
+
+  const Agenda({
+    required this.judul,
+    required this.kategori,
+    required this.tanggal,
+    required this.lokasi,
+    this.deskripsi,
+  });
+}</code></pre>
+    <p>
+      Memisahkan model ke file tersendiri adalah kebiasaan penting.
+      Saat project berkembang, file ini dapat diimpor dari mana saja tanpa duplikasi kode.
+    </p>
+
+    <h3>2. Isi data dummy</h3>
+    <p>Buat file baru: <code>lib/data/agenda_data.dart</code></p>
+    <pre><code>import '../models/agenda.dart';
+
+const agendaDummy = &lt;Agenda&gt;[
+  Agenda(
+    judul: 'Seminar Karier Teknologi Informasi',
+    kategori: 'Seminar',
+    tanggal: '19 Oktober 2026',
+    lokasi: 'Auditorium UNIMUGO',
+    deskripsi: 'Diskusi bersama praktisi industri teknologi.',
+  ),
+  Agenda(
+    judul: 'Workshop Git untuk Proyek TI',
+    kategori: 'Laboratorium',
+    tanggal: '12 Oktober 2026',
+    lokasi: 'Lab Komputer UNIMUGO',
+  ),
+  Agenda(
+    judul: 'Presentasi Proyek Akhir Semester',
+    kategori: 'Akademik',
+    tanggal: '26 Oktober 2026',
+    lokasi: 'Ruang Seminar UNIMUGO',
+    deskripsi: 'Presentasi proyek kelompok di hadapan dosen penguji.',
+  ),
+];</code></pre>
+
+    <h3>3. Fungsi validasi</h3>
+    <p>Buat file baru: <code>lib/utils/validasi.dart</code></p>
+    <pre><code>// Mengembalikan null jika valid, atau String pesan error jika tidak valid.
+// Pola String? ini adalah standar validator yang digunakan TextFormField di Flutter.
+String? validasiJudul(String judul) {
+  if (judul.trim().isEmpty) {
+    return 'Judul agenda tidak boleh kosong';
+  }
+  if (judul.trim().length &lt; 5) {
+    return 'Judul terlalu pendek, minimal 5 karakter';
+  }
+  return null; // null berarti valid
+}
+
+String? validasiTanggal(String tanggal) {
+  if (tanggal.trim().isEmpty) {
+    return 'Tanggal tidak boleh kosong';
+  }
+  return null;
+}</code></pre>
+    <p>
+      <code>trim()</code> menghapus spasi di awal dan akhir string, sehingga input
+      yang hanya berisi spasi tetap dianggap kosong. Pola ini konsisten dengan cara
+      Flutter menangani validasi form di modul berikutnya.
+    </p>
+
+    <h3>4. Tampilkan daftar dengan ListView</h3>
+    <p>Perbarui <code>lib/main.dart</code> &mdash; ganti class <code>EventHomePage</code> dan tambahkan import:</p>
+    <pre><code>import 'package:flutter/material.dart';
+import 'data/agenda_data.dart';
+import 'models/agenda.dart';
+
+void main() =&gt; runApp(const UnimugoEventApp());
+
+class UnimugoEventApp extends StatelessWidget {
+  const UnimugoEventApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'UNIMUGO Event',
+      theme: ThemeData(colorSchemeSeed: Colors.teal, useMaterial3: true),
+      home: const EventHomePage(),
+    );
+  }
+}
+
+class EventHomePage extends StatelessWidget {
+  const EventHomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Agenda Program Studi (${agendaDummy.length})'),
+      ),
+      // ListView.builder hanya membangun item yang terlihat di layar
+      // sehingga efisien untuk daftar yang panjang
+      body: ListView.builder(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        itemCount: agendaDummy.length,
+        itemBuilder: (context, index) {
+          final agenda = agendaDummy[index];
+          return AgendaTile(agenda: agenda);
+        },
+      ),
+    );
+  }
+}
+
+// Widget tile terpisah agar EventHomePage tidak terlalu panjang
+class AgendaTile extends StatelessWidget {
+  final Agenda agenda;
+  const AgendaTile({super.key, required this.agenda});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        child: Text(
+          agenda.kategori[0], // huruf pertama kategori
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+          ),
+        ),
+      ),
+      title: Text(agenda.judul),
+      subtitle: Text(
+        '${agenda.kategori} &middot; ${agenda.tanggal}\n${agenda.lokasi}',
+      ),
+      // Tampilkan deskripsi jika ada, atau teks default menggunakan ??
+      isThreeLine: true,
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () {
+        // Navigasi ke detail akan ditambahkan di Modul 03
+      },
+    );
+  }
+}</code></pre>
+
+    <h3>5. Uji validasi</h3>
+    <p>Tambahkan sementara di awal <code>main()</code> untuk memverifikasi fungsi bekerja:</p>
+    <pre><code>void main() {
+  // Pengujian validasi &mdash; hapus setelah selesai
+  assert(validasiJudul('') == 'Judul agenda tidak boleh kosong');
+  assert(validasiJudul('   ') == 'Judul agenda tidak boleh kosong');
+  assert(validasiJudul('Git') == 'Judul terlalu pendek, minimal 5 karakter');
+  assert(validasiJudul('Workshop Flutter') == null);
+  print('Semua validasi lolos');
+
+  runApp(const UnimugoEventApp());
+}</code></pre>
+    <p>
+      <code>assert()</code> akan melempar error jika kondisinya salah &mdash;
+      berguna untuk memverifikasi logika selama pengembangan tanpa framework testing penuh.
+      Hapus baris assert setelah yakin fungsi bekerja benar.
+    </p>
+
+    <h2>K. Hasil yang Diharapkan</h2>
+    <ul class="checklist">
+      <li>Output <code>flutter doctor</code> menampilkan <code>[&checkmark;]</code> pada Flutter dan Android toolchain.</li>
+      <li>Aplikasi berjalan pada emulator atau perangkat fisik tanpa error.</li>
+      <li>Tiga agenda tampil dalam <code>ListView</code> dengan judul, kategori, tanggal, dan lokasi.</li>
+      <li>Jumlah agenda tampil di AppBar.</li>
+      <li>Fungsi <code>validasiJudul</code> mengembalikan pesan yang benar untuk input kosong dan input pendek.</li>
+      <li>Struktur folder <code>lib/models/</code>, <code>lib/data/</code>, dan <code>lib/utils/</code> sudah ada.</li>
+      <li>Repository Git berisi minimal satu commit dengan pesan yang bermakna.</li>
+      <li>File <code>.gitignore</code> menyertakan <code>/build</code> dan <code>.dart_tool/</code>.</li>
+    </ul>
+
+    <h2>L. Eksperimen</h2>
+    <ol>
+      <li>
+        <strong>StatefulWidget:</strong> ubah <code>AgendaTile</code> menjadi <code>StatefulWidget</code>.
+        Tambahkan variabel <code>bool disukai = false</code> dan <code>IconButton</code> yang mengubahnya
+        antara ikon hati kosong dan hati penuh. Amati peran <code>setState()</code>.
+      </li>
+      <li>
+        <strong>Null safety:</strong> tampilkan <code>agenda.deskripsi</code> pada tile.
+        Gunakan operator <code>??</code> agar agenda tanpa deskripsi menampilkan teks
+        <em>'Tidak ada deskripsi'</em>. Bandingkan hasilnya antara agenda yang punya deskripsi dan yang tidak.
+      </li>
+      <li>
+        <strong>const vs var:</strong> ubah <code>const agendaDummy</code> menjadi <code>var agendaDummy</code>.
+        Tambahkan satu agenda baru menggunakan method <code>add()</code> di dalam <code>main()</code>
+        sebelum <code>runApp()</code>. Amati apakah daftar bertambah dan mengapa <code>const</code> tidak mengizinkan ini.
+      </li>
+    </ol>
+
+    <h2>M. Tugas Praktikum</h2>
+    <p>Kembangkan project <code>unimugo_event</code> dengan ketentuan berikut:</p>
+    <ol>
+      <li>Tambahkan minimal tiga agenda baru ke <code>agendaDummy</code> dengan kategori yang berbeda-beda.</li>
+      <li>
+        Buat widget <code>KategoriBadge</code> yang menerima parameter <code>String kategori</code>
+        dan menampilkannya sebagai chip kecil berwarna. Warna chip dapat berbeda berdasarkan nilai kategori
+        (gunakan <code>switch</code> atau <code>Map</code>).
+      </li>
+      <li>
+        Tampilkan <code>KategoriBadge</code> di dalam <code>AgendaTile</code>
+        menggantikan atau melengkapi <code>CircleAvatar</code>.
+      </li>
+      <li>
+        Tambahkan fungsi <code>List&lt;Agenda&gt; filterByKategori(String kategori)</code>
+        di file <code>agenda_data.dart</code> yang mengembalikan hanya agenda dengan kategori tertentu.
+        Uji fungsi ini dengan <code>assert</code> di <code>main()</code>.
+      </li>
+      <li>Commit setiap perubahan yang bermakna dengan pesan commit yang jelas dan menggunakan awalan <code>feat:</code>, <code>fix:</code>, atau <code>refactor:</code>.</li>
+    </ol>
+    <div class="callout">
+      Sertakan screenshot aplikasi berjalan dan output <code>flutter doctor</code>
+      pada folder <code>docs/screenshots/</code> di repository.
+    </div>
+
+    <h2>N. Refleksi</h2>
+    <ol>
+      <li>Apa perbedaan praktis antara <code>var</code>, <code>final</code>, dan <code>const</code>? Berikan contoh kasus penggunaan yang tepat untuk masing-masing dari konteks aplikasi kampus.</li>
+      <li>Kapan sebuah widget harus menggunakan <code>StatefulWidget</code> alih-alih <code>StatelessWidget</code>? Berikan dua contoh konkret dari fitur yang mungkin ada di aplikasi UNIMUGO Event.</li>
+      <li>Apa yang terjadi jika folder <code>build/</code> ikut di-commit ke repository? Mengapa <code>.gitignore</code> penting untuk kolaborasi tim?</li>
+      <li>Jika tim program studi memutuskan menggunakan React Native alih-alih Flutter, apa yang perlu dipertimbangkan ulang selain bahasa pemrograman?</li>
+      <li>Masalah apa yang Anda temui selama setup environment, dan bagaimana cara mengatasinya? Tuliskan langkah solusinya agar dapat menjadi referensi teman sekelas.</li>
+    </ol>
+
+    <h2>O. Referensi</h2>
+    <ul>
+      <li><a href="https://docs.flutter.dev/get-started/install/windows/mobile" target="_blank">Flutter &mdash; Install on Windows (Mobile)</a></li>
+      <li><a href="https://dart.dev/language" target="_blank">Dart Language Tour</a></li>
+      <li><a href="https://dartpad.dev" target="_blank">DartPad &mdash; playground Dart online</a></li>
+      <li><a href="https://docs.flutter.dev/ui" target="_blank">Flutter &mdash; Introduction to widgets</a></li>
+      <li><a href="https://docs.flutter.dev/get-started/flutter-for/declarative" target="_blank">Flutter &mdash; Declarative UI</a></li>
+      <li><a href="https://docs.flutter.dev/ui/widgets/basics" target="_blank">Flutter &mdash; Basic widgets</a></li>
+      <li><a href="https://pub.dev" target="_blank">pub.dev &mdash; direktori package Dart dan Flutter</a></li>
+      <li><a href="https://docs.github.com/en/get-started" target="_blank">GitHub &mdash; Get started with Git</a></li>
+    </ul>
+
+    <div class="module-nav">
+      <a href="../index.html">&larr; Daftar Modul</a>
+      <a href="../modul-02/index.html">Modul 02 &rarr;</a>
+    </div>
+
+  </main>
+</div>
+<script src="../../../assets/js/navigation.js"></script>
+</body>
+</html>

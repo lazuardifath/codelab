@@ -1,0 +1,27 @@
+[
+  {
+    "id": "pemrograman-mobile",
+    "name": "Pemrograman Mobile",
+    "shortName": "PM",
+    "description": "Pengembangan aplikasi mobile dengan Flutter, Dart, pengelolaan state, integrasi layanan, pengujian, dan deployment.",
+    "category": "pemrograman",
+    "semester": 5,
+    "status": "active",
+    "type": "practical",
+    "version": "1.0",
+    "lastUpdated": "2026-09-17",
+    "moduleCount": 3,
+    "modules": [
+      {"number":"01","slug":"modul-01","title":"Fondasi Flutter dan kesiapan environment","summary":"Setup, Dart dasar, dan arsitektur Flutter"},
+      {"number":"02","slug":"modul-02","title":"UI deklaratif dan desain responsif","summary":"Widget, layout, tema, dan aksesibilitas"},
+      {"number":"03","slug":"modul-03","title":"Navigasi dan pengelolaan state","summary":"Route, GoRouter, Riverpod, dan state async"}
+    ],
+    "keywords": "Flutter Dart widget UI responsif GoRouter Riverpod mobile",
+    "tools": ["Flutter", "Dart", "Visual Studio Code", "Android Studio"],
+    "outcomes": ["Merancang antarmuka aplikasi mobile", "Mengelola navigasi dan state", "Menguji aplikasi secara bertahap"]
+  },
+  {"id":"basis-data","name":"Basis Data","shortName":"BD","description":"Konsep dan implementasi basis data relasional, pemodelan data, SQL, dan normalisasi.","category":"data","semester":2,"status":"planned","type":"practical","version":"0.1","lastUpdated":"2026-09-17","moduleCount":0},
+  {"id":"pemrograman-web","name":"Pemrograman Web","shortName":"PW","description":"Pengembangan aplikasi berbasis web dengan fondasi HTML, CSS, JavaScript, dan layanan web.","category":"pemrograman","semester":3,"status":"planned","type":"practical","version":"0.1","lastUpdated":"2026-09-17","moduleCount":0},
+  {"id":"integrasi-sistem","name":"Integrasi Sistem","shortName":"IS","description":"Konsep dan implementasi pertukaran data serta integrasi antar-sistem informasi.","category":"sistem","semester":5,"status":"planned","type":"project","version":"0.1","lastUpdated":"2026-09-17","moduleCount":0},
+  {"id":"metodologi-penelitian","name":"Metodologi Penelitian","shortName":"MP","description":"Perumusan masalah, rancangan penelitian, pengumpulan data, dan penyusunan proposal bidang teknologi informasi.","category":"metodologi","semester":6,"status":"planned","type":"reading","version":"0.1","lastUpdated":"2026-09-17","moduleCount":0}
+]

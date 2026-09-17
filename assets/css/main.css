@@ -1,0 +1,2 @@
+/* Legacy entry point kept for compatibility. New platform styles live in style.css. */
+@import url('./style.css');
