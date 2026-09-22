@@ -27,4 +27,4 @@ Jika perintah `python` tidak dikenali, coba `py -m http.server 8000`. Jangan mem
 
 ## Status konten
 
-Pemrograman Mobile memiliki tiga modul adaptasi awal. Mata kuliah lain tersedia sebagai metadata dan dapat dikembangkan melalui panduan pada `docs/authoring-guide.md`.
+Pemrograman Mobile memiliki tiga modul adaptasi awal. Mata kuliah lain tersedia sebagai metadata dan dapat dikembangkan melalui panduan pada `docs/authoring-guide.html`.

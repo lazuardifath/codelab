@@ -5,7 +5,7 @@ const load = (file) => fetch(`${base}data/${file}`).then((response) => {
 });
 
 function header(site) {
-  return `<header class="site-header"><nav class="nav"><a class="brand" href="${base}index.html"><span class="brand-mark">UG</span><span>${site.name}</span></a><div class="nav-links"><a href="${base}index.html">Katalog</a><a href="${base}docs/authoring-guide.md">Panduan Dosen</a></div><button class="menu-toggle" aria-label="Buka navigasi">Menu</button></nav></header>`;
+  return `<header class="site-header"><nav class="nav"><a class="brand" href="${base}index.html"><span class="brand-mark">UG</span><span>${site.name}</span></a><div class="nav-links"><a href="${base}index.html">Katalog</a><a href="${base}docs/authoring-guide.html">Panduan Dosen</a></div><button class="menu-toggle" aria-label="Buka navigasi">Menu</button></nav></header>`;
 }
 function footer(site) { return `<footer class="site-footer"><div class="container">${site.institution} · ${site.program}<br><span>Materi dikelola oleh ${site.author}. Versi platform ${site.version}.</span></div></footer>`; }
 function card(course) { return `<article class="course-card" data-category="${course.category}" data-search="${course.name} ${course.description} ${course.category} ${course.keywords || ''} ${(course.modules || []).map((module) => `${module.title} ${module.summary}`).join(' ')}"><div class="course-code">${course.shortName}</div><h3><a href="courses/${course.id}/index.html">${course.name}</a></h3><p>${course.description}</p><div class="course-meta"><span>Semester ${course.semester} · ${course.moduleCount} modul</span><span class="status ${course.status}">${course.status === 'active' ? 'Aktif' : 'Disiapkan'}</span></div></article>`; }
