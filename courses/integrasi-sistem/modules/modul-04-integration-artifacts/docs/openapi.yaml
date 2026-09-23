@@ -1,0 +1,59 @@
+openapi: 3.0.3
+info:
+  title: Academic Service API
+  version: 1.0.0
+  description: API akademik untuk menyediakan data mahasiswa.
+servers:
+  - url: http://127.0.0.1:8000
+paths:
+  /api/v1/students/{student_id}:
+    get:
+      summary: Mengambil detail mahasiswa
+      parameters:
+        - name: student_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Student ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentResponse'
+        '404':
+          description: Student tidak ditemukan
+  /api/v1/students:
+    post:
+      summary: Membuat mahasiswa
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateStudentRequest'
+      responses:
+        '201':
+          description: Student berhasil dibuat
+        '422':
+          description: Validation error
+components:
+  schemas:
+    StudentResponse:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: '#/components/schemas/Student'
+    Student:
+      type: object
+      required: [student_id, name, study_program]
+      properties:
+        student_id: { type: string }
+        name: { type: string }
+        study_program: { type: string }
+        email: { type: string, format: email }
+    CreateStudentRequest:
+      allOf:
+        - $ref: '#/components/schemas/Student'

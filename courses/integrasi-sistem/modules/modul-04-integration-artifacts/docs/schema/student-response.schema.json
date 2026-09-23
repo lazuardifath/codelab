@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Student Response",
+  "type": "object",
+  "required": ["data"],
+  "properties": {
+    "data": {
+      "type": "object",
+      "required": ["student_id", "name", "study_program"],
+      "properties": {
+        "student_id": { "type": "string" },
+        "name": { "type": "string" },
+        "study_program": { "type": "string" },
+        "email": { "type": "string", "format": "email" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
