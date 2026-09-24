@@ -1,12 +1,220 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Modul 03 · Navigasi dan State · UNIMUGO CodeLab</title><link rel="stylesheet" href="../../../assets/css/style.css"><link rel="stylesheet" href="../../../assets/css/components.css"><link rel="stylesheet" href="../../../assets/css/responsive.css"></head><body class="module-page"><div class="content-page"><div class="module-header"><div class="breadcrumb"><a href="../../../index.html">Home</a> / <a href="../index.html">Pemrograman Mobile</a> / Modul 03</div><span class="pill">Practical · 150 menit</span><h1>Navigasi dan Pengelolaan State</h1><p class="muted">Membuat alur daftar–detail untuk layanan kegiatan mahasiswa dan menangani state loading, error, serta berhasil secara terukur.</p></div><main><h2>A. Identitas Praktikum</h2><p><strong>Pertemuan:</strong> 3 · <strong>Prasyarat:</strong> Modul 01–02, konsep class dan widget.</p><h2>B. Capaian Pembelajaran</h2><ul><li>Mahasiswa mampu membedakan navigasi berbasis stack dan router deklaratif.</li><li>Mahasiswa mampu menerapkan route daftar dan detail menggunakan GoRouter.</li><li>Mahasiswa mampu menjelaskan alasan penggunaan state management pada aplikasi yang bertumbuh.</li><li>Mahasiswa mampu memodelkan state <code>loading</code>, <code>error</code>, dan <code>success</code>.</li></ul><h2>C. Konsep Dasar</h2><p>Navigator mengelola route seperti stack. <code>push</code> menambah halaman, sedangkan <code>pop</code> kembali ke halaman sebelumnya. Router deklaratif seperti GoRouter memusatkan definisi path dan memudahkan deep link. State management membantu memisahkan data yang berubah dari widget presentasi.</p><table><tr><th>State</th><th>Tampilan</th></tr><tr><td>Loading</td><td>Indikator proses dan pesan singkat</td></tr><tr><td>Error</td><td>Pesan yang dapat ditindaklanjuti dan tombol coba lagi</td></tr><tr><td>Success</td><td>Daftar atau detail data</td></tr></table><h2>D. Studi Kasus</h2><p>Pada aplikasi <strong>UNIMUGO Event</strong>, mahasiswa memilih agenda dari daftar dan membuka halaman detail. Data awal masih berasal dari repository lokal, tetapi struktur state dibuat agar pada modul berikutnya dapat diganti dengan REST API tanpa mengubah seluruh UI.</p><h2>E. Langkah Praktikum</h2><h3>Langkah 1 — Tambahkan dependency</h3><pre><code>flutter pub add go_router
-flutter pub add flutter_riverpod</code></pre><h3>Langkah 2 — Definisikan route</h3><pre><code>final router = GoRouter(
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Modul 03 - Navigasi, Routing, State Management, dan UI State</title>
+<link rel="stylesheet" href="../../../assets/css/style.css"><link rel="stylesheet" href="../../../assets/css/components.css"><link rel="stylesheet" href="../../../assets/css/responsive.css"><link rel="stylesheet" href="../../../assets/css/mobile-course.css">
+</head>
+<body class="module-page mobile-module-page">
+<header class="module-topbar"><a class="module-brand" href="../../../index.html"><span class="brand-mark">UG</span><span>UNIMUGO CodeLab</span></a><span class="module-title">Pemrograman Mobile / Modul 03</span><a class="module-catalog" href="../index.html">Daftar modul</a></header>
+<div class="content-page"><aside class="module-sidebar"><button class="sidebar-toggle" type="button">Navigasi materi <span>⌄</span></button><div class="sidebar-content"><div class="sidebar-label">Modul 3 dari 3</div><nav><a href="#gambaran">Gambaran</a><a href="#tujuan">Tujuan</a><a href="#konsep">Peta Konsep</a><a href="#navigation">Navigation</a><a href="#try-error">Try and Error</a><a href="#passing">Passing Data</a><a href="#gorouter">GoRouter</a><a href="#state">State</a><a href="#async">Async UI</a><a href="#riverpod">Riverpod</a><a href="#arsitektur">Arsitektur</a><a href="#testing">Testing</a><a href="#tugas">Tugas</a><a href="#checklist">Checklist</a></nav></div></aside>
+<header class="module-header"><div class="breadcrumb"><a href="../../../index.html">Home</a> / <a href="../index.html">Pemrograman Mobile</a> / Modul 03</div><span class="pill">3 x 50 menit - Flutter - Dart</span><h1>Navigasi, Routing, State Management, dan UI State</h1><p class="muted">Studi kasus UNIMUGO Event: dari navigation stack dan route parameter sampai loading, error, empty, success, dan retry.</p><div class="progress-track"><span data-progress-bar></span></div><small data-progress-label>0% - Belum dimulai</small></header>
+<main>
+<section id="gambaran"><h2>A. Gambaran Umum</h2><p>Pada Modul 02 mahasiswa belajar widget, layout, state lokal, responsive layout, theme, dan accessibility. Modul ini menjawab: bagaimana aplikasi berpindah halaman, membawa data antarhalaman, mengelola state, dan menampilkan kondisi aplikasi secara benar?</p><div class="mobile-file-tree">Agenda List
+     │ klik event
+     ↓
+Detail Event
+     │ klik Daftar
+     ↓
+Form Registrasi
+     │ berhasil
+     ↓
+Konfirmasi</div><p>Urutan konsep: <strong>Navigation → Routing → Passing Parameters → State → Async State → Loading/Error/Empty/Success → State Management</strong>.</p><div class="mobile-callout"><strong>Catatan scope:</strong> modul ini memakai data lokal/dummy terlebih dahulu. PokeAPI tidak digunakan di sini dan akan menjadi konteks API pada pertemuan 9.</div></section>
+<section id="tujuan"><h2>B. Tujuan Pembelajaran</h2><h3>Fundamental</h3><ul><li>menjelaskan navigation stack, <code>push()</code>, <code>pop()</code>, route, parameter, deep linking, dan hubungan URL dengan halaman;</li><li>membedakan navigation imperatif dan declarative routing.</li></ul><h3>Flutter</h3><ul><li>menggunakan Navigator, MaterialPageRoute, passing data, GoRouter, route parameter, nested route sederhana, dan tombol back;</li></ul><h3>State</h3><ul><li>membedakan UI, local state, shared state, dan memahami kapan <code>setState()</code> cukup;</li><li>menggunakan Riverpod, ProviderScope, provider dependency, dan <code>FutureProvider.family</code>.</li></ul><h3>Async UI dan engineering</h3><ul><li>memahami Future, simulasi request, loading, success, empty, error, retry;</li><li>memisahkan model, repository, state, UI; menjalankan <code>flutter analyze</code> dan <code>flutter test</code>.</li></ul></section>
+<section id="konsep"><h2>C. Peta Konsep</h2><div class="mobile-file-tree">APPLICATION
+├── NAVIGATION
+│   ├── Navigator → push / pop
+│   └── GoRouter → route / params / deep link
+└── STATE
+    ├── Local State → setState()
+    └── Shared State → Riverpod
+
+DATA REQUEST
+└── Loading
+    └── Finished → Success / Empty / Error</div><p>State aplikasi diterjemahkan menjadi UI yang dapat dipahami pengguna. State bukan sekadar boolean loading; ia harus menjelaskan kondisi aplikasi secara eksplisit.</p></section>
+<section id="navigation"><h2>D. Bagian 1 - Memahami Navigation</h2><h3>D.1 Apa itu Navigation?</h3><p>Navigation adalah mekanisme berpindah dari satu screen/page ke screen/page lain. Contoh: Home → Detail → Checkout. Flutter menyediakan Navigator sebagai mekanisme dasar.</p><h3>D.2 Navigation Stack</h3><p>Bayangkan stack seperti tumpukan buku.</p><div class="mobile-file-tree">Awal:       [Page 1]
+push:       [Page 1] [Page 2]
+push lagi:  [Page 1] [Page 2] [Page 3]
+pop:        [Page 1] [Page 2]</div><p><code>push</code> menambahkan halaman. <code>pop</code> menghapus halaman paling atas, sehingga back tidak kembali ke halaman kosong.</p></section>
+<section id="praktik-navigation"><h2>E. Praktik 1 - Navigation Paling Sederhana</h2><p>Buat project Flutter atau gunakan project dari modul sebelumnya. Struktur mini-lab:</p><div class="mobile-file-tree">lib/
+├── main.dart
+└── features/lab/
+    ├── page_one.dart
+    ├── page_two.dart
+    └── page_three.dart</div><div class="mobile-code"><span class="filename">lib/main.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>import 'package:flutter/material.dart';
+import 'features/lab/page_one.dart';
+
+void main() =&gt; runApp(const MaterialApp(home: PageOne()));</code></pre></div><div class="mobile-code"><span class="filename">page_one.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>Navigator.push(
+  context,
+  MaterialPageRoute(builder: (_) =&gt; const PageTwo()),
+);</code></pre></div><div class="mobile-code"><span class="filename">page_two.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>Navigator.push(
+  context,
+  MaterialPageRoute(builder: (_) =&gt; const PageThree()),
+);</code></pre></div><div class="mobile-code"><span class="filename">page_three.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>Navigator.pop(context);</code></pre></div><p>Page 1 membuka Page 2, Page 2 membuka Page 3, dan Page 3 menggunakan pop untuk kembali satu tingkat.</p></section>
+<section id="try-error"><h2>F. Eksperimen Stack dan Lab Try and Error</h2><p>Mahasiswa wajib menggambar stack pada setiap kondisi:</p><ol class="mobile-step-list"><li>Aplikasi dibuka: <code>[Page 1]</code>.</li><li>Klik Page 2: <code>[Page 1, Page 2]</code>.</li><li>Klik Page 3: <code>[Page 1, Page 2, Page 3]</code>.</li><li>Tekan back: <code>[Page 1, Page 2]</code>.</li></ol><h3>Kesalahan yang disengaja</h3><p>Ganti <code>Navigator.pop(context)</code> menjadi:</p><div class="mobile-code"><span class="filename">bug_push.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>Navigator.push(
+  context,
+  MaterialPageRoute(builder: (_) =&gt; const PageThree()),
+);</code></pre></div><p>Klik tombol lima kali. Stack menjadi Page 1 → Page 2 → Page 3 → Page 3 → Page 3 → Page 3 → Page 3. Page 3 tidak menggantikan Page 3 sebelumnya; setiap <code>push()</code> membuat route baru dan stack terus bertambah.</p><div class="mobile-callout"><strong>Pertanyaan debugging:</strong> apa dampaknya terhadap memory dan tombol back? Mengapa aplikasi nyata tidak boleh sembarangan melakukan push?</div></section>
+<section id="passing"><h2>G. Mengirim Data Antarhalaman</h2><p>Ketika user memilih Workshop Flutter, detail harus mengetahui bahwa <code>id = a2</code>.</p><div class="mobile-code"><span class="filename">agenda_detail_page.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>class DetailPage extends StatelessWidget {
+  const DetailPage({super.key, required this.id});
+  final String id;
+
+  @override
+  Widget build(BuildContext context) =&gt; Scaffold(
+    appBar: AppBar(title: const Text('Detail Agenda')),
+    body: Text('Detail agenda $id'),
+  );
+}
+
+Navigator.push(
+  context,
+  context,
+  MaterialPageRoute(builder: (_) => const DetailPage(id: 'a2')),
+);</code></pre></div><p>Alurnya: List → user memilih item → ambil id → buat DetailPage(id) → DetailPage menerima id.</p><h3>G.1 Dari Constructor ke Route Parameter</h3><p>Constructor cocok untuk alur kecil. Aplikasi yang memerlukan deep link, browser URL, route guard, dan nested route membutuhkan routing yang terstruktur.</p></section>
+<section id="gorouter"><h2>H. Declarative Routing dengan GoRouter</h2><p>Routing deklaratif mendefinisikan hubungan URL → Route → Page.</p><div class="mobile-code"><span class="filename">terminal</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>flutter pub add go_router</code></pre></div><div class="mobile-code"><span class="filename">lib/app.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>final router = GoRouter(
+  initialLocation: '/',
   routes: [
-    GoRoute(path: '/', builder: (_, __) =&gt; const AgendaPage()),
+    GoRoute(path: '/', builder: (_, __) =&gt; const AgendaListPage()),
     GoRoute(
       path: '/agenda/:id',
-      builder: (_, state) =&gt; DetailPage(
+      builder: (context, state) =&gt; AgendaDetailPage(
         id: state.pathParameters['id']!,
       ),
     ),
   ],
-);</code></pre><p>Gunakan <code>MaterialApp.router(routerConfig: router)</code>. Parameter <code>:id</code> memungkinkan satu halaman detail digunakan untuk banyak agenda.</p><h3>Langkah 3 — Pisahkan state dari tampilan</h3><p>Buat provider atau notifier yang mengekspos state dengan tiga keadaan. Widget hanya membaca state dan memilih tampilan yang sesuai. Jangan mencampur pemanggilan data, navigasi, dan seluruh markup dalam satu method <code>build</code>.</p><h3>Langkah 4 — Uji alur</h3><ol><li>Buka daftar agenda.</li><li>Pilih agenda “Workshop Git untuk Proyek TI”.</li><li>Pastikan detail menampilkan id yang benar.</li><li>Simulasikan error repository dan pastikan tombol “Coba lagi” dapat digunakan.</li></ol><h2>F. Hasil yang Diharapkan</h2><ul class="checklist"><li>Route <code>/</code> dan <code>/agenda/:id</code> dapat dibuka.</li><li>Tombol kembali mengembalikan pengguna ke daftar.</li><li>UI memiliki keadaan loading, error, dan success.</li><li>Data dan widget dipisahkan dalam folder yang masuk akal.</li></ul><h2>G. Eksperimen</h2><p>Tambahkan route <code>/agenda/:id/daftar-hadir</code> dan buat guard sederhana: halaman hanya dapat dibuka jika id agenda tidak kosong. Uji deep link dengan menempelkan URL detail pada browser/emulator web.</p><h2>H. Tugas Praktikum</h2><p>Bangun fitur pencarian agenda. Search bar harus mengubah daftar berdasarkan judul, memiliki keadaan hasil kosong, dan tetap mempertahankan navigasi ke detail. Sertakan satu widget test untuk memastikan item hasil pencarian tampil.</p><h2>I. Refleksi</h2><ol><li>Kapan <code>push</code> lebih tepat daripada <code>go</code>?</li><li>Apa dampaknya jika error state tidak dimodelkan?</li><li>Bagian mana yang perlu diubah ketika repository lokal diganti REST API?</li></ol><h2>Referensi</h2><ul><li><a href="https://pub.dev/packages/go_router" target="_blank">go_router package documentation</a></li><li><a href="https://riverpod.dev/docs/introduction/getting_started" target="_blank">Riverpod documentation</a></li><li><a href="https://docs.flutter.dev/cookbook/testing/widget/introduction" target="_blank">Flutter widget testing</a></li></ul><div class="module-nav"><a href="../modul-02/index.html">← Modul 02</a><a href="../index.html">Daftar Modul →</a></div></main></div><script src="../../../assets/js/navigation.js"></script></body></html>
+);
+
+MaterialApp.router(routerConfig: router)</code></pre></div><p><code>:id</code> adalah parameter dinamis. URL valid: <code>/agenda/a1</code>, <code>/agenda/a2</code>, dan <code>/agenda/a3</code>.</p><div class="mobile-code"><span class="filename">nested_route.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>GoRoute(
+  path: '/agenda/:id',
+  routes: [
+    GoRoute(
+      path: 'registrasi',
+      builder: (context, state) =&gt; RegistrationPage(
+        id: state.pathParameters['id']!,
+      ),
+    ),
+  ],
+)</code></pre></div><p>Nested route tersebut menghasilkan URL <code>/agenda/a2/registrasi</code>. Route anak melanjutkan parameter <code>id</code> dari route induk.</p><div class="mobile-code"><span class="filename">navigation_with_router.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>context.go('/agenda/${agenda.id}'); // lokasi
+context.push('/agenda/${agenda.id}'); // stack</code></pre></div><p><code>go()</code> berpindah ke lokasi, sedangkan <code>push()</code> menambahkan route ke stack. Buka langsung <code>/agenda/a2</code> untuk menguji deep link.</p></section>
+<section id="state"><h2>I. Bagian 2 - Memahami State</h2><p>State adalah data atau kondisi yang dapat berubah dan memengaruhi UI. Contoh: <code>selectedCategory</code>, <code>isLoading</code>, <code>counter</code>, <code>agendaList</code>, dan <code>isLoggedIn</code>.</p><h3>I.1 Local State</h3><div class="mobile-code"><span class="filename">local_state.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>bool isFavorite = false;
+
+setState(() {
+  isFavorite = !isFavorite;
+});</code></pre></div><p>Gunakan <code>setState()</code> jika state sederhana, lokal, hanya dipakai satu screen/widget, dan tidak dibagikan.</p><h3>I.2 Shared State</h3><div class="mobile-file-tree">Agenda Repository
+       ↓
+   Agenda State
+    ┌──┴──┐
+    ↓     ↓
+  List  Detail</div><p>Jika list dan detail memakai data favorite yang sama, state yang tersebar menjadi sulit dirawat. Di sinilah state management dibutuhkan.</p></section>
+<section id="riverpod"><h2>J. Riverpod dan ProviderScope</h2><p>Riverpod digunakan ketika dependency, lifecycle, dan shared state perlu dikelola lebih terstruktur.</p><div class="mobile-code"><span class="filename">terminal</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>flutter pub add flutter_riverpod</code></pre></div><div class="mobile-code"><span class="filename">lib/main.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>void main() {
+  runApp(const ProviderScope(child: App()));
+}</code></pre></div><p><code>ProviderScope</code> menyediakan container Riverpod bagi widget turunannya. Tanpa wrapper ini, provider tidak memiliki scope untuk dibaca.</p></section>
+<section id="repository"><h2>K. Repository dan Dummy Data</h2><p>Repository memisahkan UI dari detail sumber data.</p><div class="mobile-file-tree">UI → State → Repository → Data Source</div><div class="mobile-code"><span class="filename">lib/data/agenda_repository.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>class AgendaRepository {
+  Future&lt;List&lt;Agenda&gt;&gt; findAll() async {
+    await Future.delayed(const Duration(seconds: 1));
+    return localAgendas;
+  }
+
+  Future&lt;Agenda&gt; findById(String id) async {
+    await Future.delayed(const Duration(seconds: 1));
+    return localAgendas.firstWhere((item) =&gt; item.id == id);
+  }
+}</code></pre></div><p>Kita belum memakai HTTP agar mahasiswa memahami abstraksi lebih dahulu. Pada pertemuan API, data source dapat diganti menjadi REST API tanpa mengubah seluruh UI.</p></section>
+<section id="async"><h2>L. Async UI dan Empat Kondisi</h2><p><code>Future</code> merepresentasikan pekerjaan yang selesai kemudian. Gunakan delay untuk mensimulasikan request jaringan, bukan untuk membuat aplikasi lambat.</p><div class="mobile-file-tree">REQUEST
+  ↓
+LOADING
+  ↓ selesai
+SUCCESS / EMPTY / ERROR
+
+Loading: Memuat agenda...
+Success: 6 agenda ditemukan
+Empty: Belum ada agenda
+Error: Gagal memuat agenda - [Coba Lagi]</div><p>Aplikasi nyata dapat menghadapi server lambat, internet mati, database kosong, atau request gagal. UI harus merepresentasikan kondisi tersebut.</p></section>
+<section id="model-state"><h2>M. Model State dan State Machine</h2><p>State eksplisit lebih jelas daripada banyak boolean yang saling bertentangan.</p><div class="mobile-code"><span class="filename">lib/state/agenda_list_state.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>sealed class AgendaListState {}
+class AgendaLoading extends AgendaListState {}
+class AgendaEmpty extends AgendaListState {}
+class AgendaSuccess extends AgendaListState {
+  AgendaSuccess(this.items);
+  final List&lt;Agenda&gt; items;
+}
+class AgendaFailure extends AgendaListState {
+  AgendaFailure(this.message);
+  final String message;
+}</code></pre></div><div class="mobile-file-tree">LOADING
+   ↓ request selesai
+SUCCESS / EMPTY / ERROR
+   ↓ retry
+LOADING</div><p>UI membaca state lalu menerjemahkannya menjadi progress indicator, daftar, pesan empty, atau error dengan retry.</p></section>
+<section id="providers"><h2>N. Riverpod Provider dan FutureProvider.family</h2><div class="mobile-code"><span class="filename">lib/state/agenda_providers.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>final agendaRepositoryProvider = Provider&lt;AgendaRepository&gt;(
+  (ref) =&gt; AgendaRepository(),
+);
+
+final agendaDetailProvider = FutureProvider.family&lt;Agenda, String&gt;(
+  (ref, id) =&gt; ref.watch(agendaRepositoryProvider).findById(id),
+);</code></pre></div><p><code>family</code> berarti provider menerima parameter. <code>agendaDetailProvider('a1')</code> dan <code>agendaDetailProvider('a2')</code> adalah dependency berbeda. Alur UI: Provider → Future → AsyncValue → loading/success/error.</p><h3>N.1 Retry</h3><p>Retry harus mengulang request: ERROR → RETRY → LOADING → SUCCESS/EMPTY/ERROR. Pada provider, gunakan invalidate atau panggil ulang notifier sesuai pola yang dipakai.</p></section>
+<section id="detail"><h2>O. Detail Page</h2><p>URL <code>/agenda/a2</code> menghasilkan <code>id = a2</code>. ID digunakan oleh provider dan repository.</p><div class="mobile-file-tree">URL → id → provider → repository → data → detail UI</div><p>Inilah alur yang harus dipahami sebelum repository diganti REST API.</p></section>
+<section id="arsitektur"><h2>P. Struktur Project Final</h2><div class="mobile-file-tree">lib/
+├── main.dart
+├── app.dart
+├── models/agenda.dart
+├── data/agenda_repository.dart
+├── state/
+│   ├── agenda_list_state.dart
+│   └── agenda_providers.dart
+├── features/agenda/
+│   ├── agenda_list_page.dart
+│   ├── agenda_detail_page.dart
+│   ├── widgets/
+│   │   ├── agenda_card.dart
+│   │   ├── agenda_loading.dart
+│   │   ├── agenda_error.dart
+│   │   └── agenda_empty.dart
+│   └── registration/
+│       └── registration_page.dart
+└── theme/app_theme.dart</div><p>Mahasiswa harus dapat menjelaskan mengapa setiap file berada di folder tersebut.</p></section>
+<section id="alur-aplikasi"><h2>Q. Alur Aplikasi Lengkap</h2><div class="mobile-file-tree">USER
+  ↓
+UI / Page
+  ↓
+Navigation → Router → State
+  ↓
+Repository → Data Source
+  ↓
+Result / Error
+  ↓
+State → UI</div><p>Dari list, user memilih event, GoRouter membaca <code>:id</code>, provider mengambil data melalui repository, lalu state menentukan UI.</p></section>
+<section id="testing"><h2>R. Testing</h2><table class="mobile-table"><thead><tr><th>Skenario</th><th>Input</th><th>Expected</th></tr></thead><tbody><tr><td>Initial</td><td>Buka /</td><td>List tampil</td></tr><tr><td>Detail</td><td>Klik event</td><td>Detail tampil</td></tr><tr><td>Parameter</td><td>/agenda/a1</td><td>Agenda a1</td></tr><tr><td>Invalid ID</td><td>/agenda/xxx</td><td>Error/not found</td></tr><tr><td>Empty</td><td>Repository kosong</td><td>Empty UI</td></tr><tr><td>Error</td><td>Repository throw</td><td>Error UI</td></tr><tr><td>Retry</td><td>Klik retry</td><td>Request ulang</td></tr><tr><td>Back</td><td>Tekan back</td><td>Kembali ke list</td></tr><tr><td>Deep link</td><td>Buka URL detail</td><td>Detail langsung</td></tr></tbody></table><div class="mobile-code"><span class="filename">terminal</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>flutter analyze
+flutter test</code></pre></div></section>
+<section id="debugging"><h2>S. Debugging Lab</h2><ol class="mobile-step-list"><li><strong>ProviderScope missing:</strong> pastikan root memakai <code>ProviderScope</code>.</li><li><strong>No GoRouter found:</strong> pastikan memakai <code>MaterialApp.router</code> dan router yang benar.</li><li><strong>Route tidak ditemukan:</strong> bedakan <code>/agenda/:id</code> dengan <code>/agenda/id</code>.</li><li><strong>Detail selalu sama:</strong> periksa id dan gunakan provider family.</li><li><strong>Retry tidak bekerja:</strong> pastikan alurnya error → retry → request ulang.</li></ol></section>
+<section id="praktik-lengkap"><h2>T. Praktik Terpandu Lengkap</h2><ol class="mobile-step-list"><li>Buat model Agenda.</li><li>Buat repository lokal.</li><li>Buat halaman list.</li><li>Buat halaman detail.</li><li>Implementasikan Navigator.</li><li>Ganti Navigator dengan GoRouter.</li><li>Tambahkan route parameter dan deep link.</li><li>Tambahkan Riverpod.</li><li>Tambahkan loading, success, empty, error, dan retry.</li><li>Tambahkan testing.</li></ol><p>Mahasiswa mengalami evolusi aplikasi, bukan langsung diberikan aplikasi jadi.</p></section>
+<section id="tugas"><h2>U. Tugas Praktikum - UNIMUGO Event</h2><p>Kembangkan aplikasi dengan halaman dan route:</p><div class="mobile-file-tree">Agenda → Detail Agenda → Registrasi
+/ → /agenda/:id → /agenda/:id/registrasi</div><p>Fitur wajib: daftar, detail, route parameter, deep link, pencarian, filter kategori, loading, success, empty, error, retry, back, Riverpod, repository abstraction, dan responsive UI dari Modul 02.</p></section>
+<section id="ketentuan"><h2>V. Ketentuan Arsitektur</h2><p>Jangan menaruh seluruh kode di <code>main.dart</code>. Minimal pisahkan Model, Repository, State, Page, Widget, dan Router. Mahasiswa harus mampu menjawab: mengapa file ini berada di folder tersebut?</p></section>
+<section id="bukti"><h2>W. Tugas Testing</h2><p>Kumpulkan screenshot list, detail, URL dengan ID, loading, empty, error, retry, dan deep link. Sertakan hasil <code>flutter analyze</code> dan <code>flutter test</code>.</p></section>
+<section id="git"><h2>X. Git Requirement</h2><div class="mobile-code"><span class="filename">terminal</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>git add lib
+git commit -m "Build agenda navigation and state flow"</code></pre></div><p>Commit bertahap yang disarankan: model, repository, list, detail, GoRouter, Riverpod, dan UI state.</p></section>
+<section id="quiz"><h2>Y. Quiz Pemahaman</h2><form class="mobile-quiz" data-mobile-quiz><fieldset><legend>1. Apa fungsi Navigator.push?</legend><label><input type="radio" name="mobile-q0" value="stack"> Menambah route ke stack</label><label><input type="radio" name="mobile-q0" value="router"> Menghapus route</label></fieldset><fieldset><legend>2. Apa fungsi Navigator.pop?</legend><label><input type="radio" name="mobile-q1" value="stack"> Menghapus route teratas</label><label><input type="radio" name="mobile-q1" value="router"> Membuat provider</label></fieldset><fieldset><legend>3. Apa arti /agenda/:id?</legend><label><input type="radio" name="mobile-q2" value="loading"> Parameter route dinamis</label><label><input type="radio" name="mobile-q2" value="error"> Nama file</label></fieldset><fieldset><legend>4. Kapan setState cukup?</legend><label><input type="radio" name="mobile-q3" value="provider"> State lokal sederhana</label><label><input type="radio" name="mobile-q3" value="stack"> Semua shared state</label></fieldset><fieldset><legend>5. Apa fungsi ProviderScope?</legend><label><input type="radio" name="mobile-q4" value="provider"> Menyediakan container Riverpod</label><label><input type="radio" name="mobile-q4" value="success"> Menampilkan success</label></fieldset><button class="button button-primary" type="submit">Periksa jawaban</button><p class="mobile-result" data-mobile-result></p></form></section>
+<section id="analisis"><h2>Z. Soal Analisis</h2><p>Aplikasi memiliki Agenda List, Detail Agenda, dan Favorite Button. Ketika user menekan Favorite pada detail, apakah <code>setState()</code> cukup? Bagaimana jika favorite juga berubah di list? Apa masalah jika setiap page memiliki state sendiri? Jelaskan bagaimana Riverpod dan repository membantu.</p></section>
+<section id="refleksi"><h2>AA. Refleksi</h2><ol><li>Mengapa navigation membutuhkan stack?</li><li>Apa masalah jika semua navigation menggunakan push()?</li><li>Mengapa route parameter lebih baik daripada halaman detail berbeda untuk setiap event?</li><li>Apa manfaat deep link?</li><li>Apa perbedaan UI dan state?</li><li>Mengapa repository dipisahkan dari UI?</li><li>Mengapa loading, error, empty, dan success berbeda?</li><li>Jika repository lokal diganti REST API, bagian mana yang berubah?</li></ol></section>
+<section id="checklist"><h2>AB. Checklist Penguasaan</h2><div class="mobile-checklist"><label><input type="checkbox" data-mobile-check> Saya memahami navigation stack, push, dan pop.</label><label><input type="checkbox" data-mobile-check> Saya dapat mengirim data dan memahami route parameter.</label><label><input type="checkbox" data-mobile-check> Saya dapat menggunakan GoRouter, :id, pathParameters, deep link, go(), dan push().</label><label><input type="checkbox" data-mobile-check> Saya memahami local/shared state dan setState().</label><label><input type="checkbox" data-mobile-check> Saya memahami ProviderScope dan Riverpod.</label><label><input type="checkbox" data-mobile-check> Saya memahami Future, loading, success, empty, error, dan retry.</label><label><input type="checkbox" data-mobile-check> Saya dapat memisahkan model, repository, provider, page, dan UI.</label><label><input type="checkbox" data-mobile-check> Saya dapat menjalankan flutter analyze dan flutter test.</label></div></section>
+<section id="indikator"><h2>AC. Indikator Keberhasilan</h2><div class="mobile-file-tree">USER
+  ↓
+UI / Page
+  ↓
+Navigation
+  ↓
+Router
+  ↓
+State
+  ↓
+Repository
+  ↓
+Data Source
+  ↓
+Result / Error
+  ↓
+State
+  ↓
+UI</div><p>Praktikum berhasil jika mahasiswa dapat menjelaskan diagram tersebut dan menjawab: jika repository lokal diganti REST API, repository/data source yang berubah, sedangkan model, route, state contract, dan sebagian besar UI tetap dapat dipertahankan.</p></section>
+</main></div><script src="../../../assets/js/mobile-module-03.js"></script>
+</body></html>

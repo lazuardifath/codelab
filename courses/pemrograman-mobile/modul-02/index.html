@@ -1,19 +1,273 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Modul 02 · UI Responsif · UNIMUGO CodeLab</title><link rel="stylesheet" href="../../../assets/css/style.css"><link rel="stylesheet" href="../../../assets/css/components.css"><link rel="stylesheet" href="../../../assets/css/responsive.css"></head><body class="module-page"><div class="content-page"><div class="module-header"><div class="breadcrumb"><a href="../../../index.html">Home</a> / <a href="../index.html">Pemrograman Mobile</a> / Modul 02</div><span class="pill">Practical · 120 menit</span><h1>UI Deklaratif dan Desain Responsif</h1><p class="muted">Menyusun dashboard kegiatan mahasiswa dengan widget Flutter yang dapat beradaptasi pada ukuran layar berbeda.</p></div><main><h2>A. Identitas Praktikum</h2><p><strong>Pertemuan:</strong> 2 · <strong>Prasyarat:</strong> Modul 01, Dart dasar.</p><h2>B. Capaian Pembelajaran</h2><ul><li>Mahasiswa mampu menjelaskan hubungan widget, konfigurasi, dan state dalam UI deklaratif.</li><li>Mahasiswa mampu menggunakan <code>StatelessWidget</code>, <code>StatefulWidget</code>, <code>Row</code>, <code>Column</code>, dan <code>Expanded</code>.</li><li>Mahasiswa mampu merancang layout yang nyaman pada layar ponsel dan tablet.</li><li>Mahasiswa mampu menerapkan theme, dark mode, dan aksesibilitas dasar.</li></ul><h2>C. Konsep Ringkas</h2><p>Pada UI deklaratif, kode menggambarkan tampilan berdasarkan data atau state saat ini. Perubahan state memicu pembangunan ulang bagian tampilan yang relevan. Gunakan <code>LayoutBuilder</code> untuk merespons ruang yang tersedia, bukan mengandalkan ukuran piksel tetap.</p><pre><code>Widget build(BuildContext context) {
-  return LayoutBuilder(
-    builder: (context, constraints) {
-      final kolom = constraints.maxWidth &gt; 600 ? 2 : 1;
-      return GridView.count(crossAxisCount: kolom);
-    },
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Modul 02 - Fundamental UI Flutter - UNIMUGO CodeLab</title>
+<link rel="stylesheet" href="../../../assets/css/style.css"><link rel="stylesheet" href="../../../assets/css/components.css"><link rel="stylesheet" href="../../../assets/css/responsive.css"><link rel="stylesheet" href="../../../assets/css/mobile-course.css">
+</head>
+<body class="module-page mobile-module-page">
+<header class="module-topbar"><a class="module-brand" href="../../../index.html"><span class="brand-mark">UG</span><span>UNIMUGO CodeLab</span></a><span class="module-title">Pemrograman Mobile / Modul 02</span><a class="module-catalog" href="../index.html">Daftar modul</a></header>
+<div class="content-page"><aside class="module-sidebar"><button class="sidebar-toggle" type="button">Navigasi materi <span>⌄</span></button><div class="sidebar-content"><div class="sidebar-label">Modul 2 dari 3</div><nav><a href="#identitas">Identitas</a><a href="#tujuan">Tujuan</a><a href="#alur">Alur</a><a href="#widget">Widget</a><a href="#stateless-stateful">Stateless vs Stateful</a><a href="#layout">Layout</a><a href="#agenda">AgendaCard</a><a href="#responsive">Responsive</a><a href="#theme">Theme</a><a href="#aksesibilitas">Accessibility</a><a href="#dashboard">Dashboard</a><a href="#tugas">Tugas</a><a href="#checklist">Checklist</a></nav></div></aside>
+<header class="module-header"><div class="breadcrumb"><a href="../../../index.html">Home</a> / <a href="../index.html">Pemrograman Mobile</a> / Modul 02</div><span class="pill">Fundamental - 3 x 50 menit - Flutter</span><h1>Fundamental UI Flutter</h1><p class="muted">Widget, layout, state, responsive design, theme, dan accessibility melalui studi kasus UNIMUGO Event.</p></header>
+<main>
+<section id="identitas"><h2>A. Identitas Praktikum</h2><table class="mobile-table"><tbody><tr><th>Pertemuan</th><td>02</td></tr><tr><th>Materi</th><td>Fundamental UI Flutter</td></tr><tr><th>Prasyarat</th><td>Modul 01 dan Dart dasar</td></tr><tr><th>Durasi</th><td>3 x 50 menit</td></tr><tr><th>Tingkat</th><td>Fundamental</td></tr><tr><th>Studi Kasus</th><td>UNIMUGO Event</td></tr><tr><th>Platform</th><td>Android / iOS / Web</td></tr><tr><th>Output</th><td>Dashboard event responsif</td></tr><tr><th>Metode</th><td>Guided Practice - Experiment - Independent Task</td></tr></tbody></table></section>
+<section id="tujuan"><h2>B. Tujuan Pembelajaran</h2><p>Mahasiswa tidak sekadar mengikuti kode, tetapi memahami alasan di balik setiap keputusan UI. Setelah praktikum, mahasiswa mampu:</p><ul><li>menjelaskan widget, widget tree, configuration, state, UI, dan declarative UI;</li><li>membedakan <code>StatelessWidget</code> dan <code>StatefulWidget</code> serta memakai <code>setState()</code>;</li><li>memahami <code>build()</code>, <code>BuildContext</code>, dan lifecycle state;</li><li>menggunakan Text, Icon, Container, Padding, Card, SizedBox, Row, Column, Expanded, Flexible, ListView, dan GridView;</li><li>menjelaskan constraint dan memperbaiki overflow;</li><li>membuat responsive UI dengan <code>LayoutBuilder</code> dan membedakannya dari <code>MediaQuery</code>;</li><li>menerapkan <code>ThemeData</code>, <code>ColorScheme</code>, light mode, dark mode, dan accessibility dasar;</li><li>membaca widget tree, melakukan debugging layout, serta membangun halaman secara mandiri.</li></ul></section>
+<section id="alur"><h2>C. Gambaran Besar Praktikum</h2><p>Dashboard tidak dibuat sekaligus. Kita membangunnya bertahap:</p><div class="mobile-file-tree">Dart dasar
+    ↓
+Widget → Widget Tree → StatelessWidget
+    ↓
+Layout → Row / Column → Expanded / Flexible
+    ↓
+State → StatefulWidget → List / Grid
+    ↓
+Responsive UI → Theme → Dark Mode → Accessibility
+    ↓
+Dashboard UNIMUGO Event</div><p>Setiap tahap memiliki eksperimen dan checkpoint. Mahasiswa harus dapat menjelaskan mengapa kode ditulis, bukan hanya menyalinnya.</p></section>
+<section id="konsep"><h2>D. Konsep Dasar: Bagaimana Flutter Menggambar UI?</h2><h3>D.1 Apa itu UI?</h3><p>UI adalah bagian aplikasi yang berinteraksi dengan pengguna: teks, tombol, gambar, kartu, form, navigasi, daftar, dan dialog. Dalam Flutter, hampir seluruh bagian UI direpresentasikan sebagai widget.</p><h3>D.2 Widget dan widget tree</h3><p>Widget adalah konfigurasi immutable untuk menjelaskan tampilan. Widget disusun di dalam widget lain sehingga membentuk tree.</p><div class="mobile-file-tree">MaterialApp
+└── Scaffold
+    ├── AppBar
+    └── Body
+        └── Column
+            ├── Text
+            ├── SizedBox
+            └── ElevatedButton</div></section>
+<section id="widget"><h2>E. Memahami Widget</h2><p>Widget Flutter pada bagian ini dibagi menjadi tiga kelompok berdasarkan tanggung jawabnya. Pembagian ini membantu mahasiswa membaca kode dan memilih widget yang tepat.</p><h3>E.1 Widget tampilan</h3><p>Widget tampilan menampilkan informasi kepada pengguna. Widget ini biasanya tidak menerima input langsung.</p><div class="mobile-code"><span class="filename">widget_tampilan.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>Text('Halo Flutter')
+Icon(Icons.home)</code></pre></div><p><code>Text</code> menampilkan tulisan, sedangkan <code>Icon</code> menampilkan simbol dari icon set Flutter. Keduanya dapat menjadi child dari widget lain.</p><h3>E.2 Widget interaksi</h3><p>Widget interaksi menerima tindakan pengguna seperti tap. Callback <code>onPressed</code> dijalankan ketika tombol ditekan.</p><div class="mobile-code"><span class="filename">widget_interaksi.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>ElevatedButton(
+  onPressed: () {
+    // aksi dijalankan setelah tombol ditekan
+  },
+  child: const Text('Simpan'),
+)</code></pre></div><p>Tombol belum otomatis mengubah UI. Jika aksi harus mengubah data atau tampilan, simpan perubahan melalui state, misalnya <code>setState()</code> pada <code>StatefulWidget</code>.</p><h3>E.3 Widget layout dan wadah</h3><p>Widget layout mengatur ukuran, jarak, posisi, atau hubungan antar-widget. Widget ini membungkus widget lain melalui properti <code>child</code> atau <code>children</code>.</p><div class="mobile-code"><span class="filename">widget_layout.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>Container(
+  padding: const EdgeInsets.all(16),
+  child: Card(
+    child: Padding(
+      padding: const EdgeInsets.all(12),
+      child: const Text('Hello'),
+    ),
+  ),
+)
+
+const SizedBox(height: 16)</code></pre></div><ul><li><code>Container</code> menyediakan wadah untuk dekorasi, padding, margin, atau ukuran.</li><li><code>Padding</code> memberi ruang di dalam batas child.</li><li><code>Card</code> memberi wadah visual dengan bentuk dan elevation.</li><li><code>SizedBox</code> memberi jarak atau ukuran yang terkontrol.</li></ul><h3>E.4 Contoh widget tree</h3><div class="mobile-file-tree">Scaffold
+└── Body
+    └── Padding
+        └── Card
+            └── Column
+                ├── Icon
+                ├── Text
+                └── ElevatedButton</div><p>Kesimpulannya: <strong>tampilan</strong> menyampaikan informasi, <strong>interaksi</strong> menerima aksi pengguna, dan <strong>layout/wadah</strong> mengatur bagaimana semuanya ditempatkan. Widget yang lebih besar dibangun dengan menggabungkan ketiga kelompok tersebut.</p></section>
+<section id="praktik-ui"><h2>F. Praktik 1 - Membuat UI Paling Sederhana</h2><p>Buka <code>lib/main.dart</code>. Gunakan kode lengkap berikut:</p><div class="mobile-code"><span class="filename">lib/main.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: const Text('UNIMUGO Event')),
+        body: const Center(child: Text('Selamat Datang')),
+      ),
+    );
+  }
+}</code></pre></div><p>Amati urutan <code>MaterialApp</code> → <code>Scaffold</code> → <code>AppBar</code> dan <code>Body</code> → <code>Center</code> → <code>Text</code>.</p></section>
+<section id="build"><h2>G. Memahami build() dan BuildContext</h2><p><code>build()</code> tidak berarti menggambar layar sekali. Artinya: deskripsikan UI berdasarkan configuration dan state saat ini. Flutter dapat memanggilnya kembali ketika input berubah.</p><div class="mobile-diagram"><div class="diagram-node">State / Configuration</div><div class="diagram-arrow"></div><div class="diagram-node">build(context)</div><div class="diagram-arrow"></div><div class="diagram-node">Widget tree / UI</div></div><p><code>BuildContext</code> adalah referensi posisi widget di dalam tree. Context dipakai untuk mengakses theme, ukuran lokal, Navigator, dan ancestor lain. Jangan menyimpan context sembarangan atau memakainya setelah widget tidak lagi aktif.</p></section>
+<section id="declarative"><h2>H. Memahami Declarative UI</h2><p>Imperatif berarti memberi perintah langkah demi langkah. Declarative berarti mendeskripsikan tampilan yang diinginkan untuk kondisi saat ini.</p><div class="mobile-code"><span class="filename">login_label.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>Text(
+  isLogin ? 'Selamat Datang' : 'Silakan Login',
+)</code></pre></div><p>Jika <code>isLogin</code> berubah, kita memperbarui state lalu mendeskripsikan UI baru. Kita tidak perlu mencari widget lama dan mengganti teksnya secara manual.</p></section>
+<section id="stateless-stateful"><h2>I. StatelessWidget vs StatefulWidget</h2><p>Perbedaan utama bukan ada atau tidaknya tombol. Pertanyaannya: apakah widget perlu menyimpan state lokal yang berubah selama widget hidup?</p><h3>I.1 StatelessWidget</h3><p>Gunakan ketika UI bergantung pada constructor parameter atau data dari parent. Konfigurasinya immutable.</p><div class="mobile-code"><span class="filename">lib/widgets/judul_halaman.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>class JudulHalaman extends StatelessWidget {
+  const JudulHalaman({super.key, required this.title});
+  final String title;
+
+  @override
+  Widget build(BuildContext context) =&gt; Text(
+    title,
+    style: Theme.of(context).textTheme.titleLarge,
   );
-}</code></pre><h2>D. Studi Kasus</h2><p>Kembangkan dashboard <strong>UNIMUGO Event</strong> yang menampilkan kartu agenda. Pada layar sempit gunakan satu kolom; pada layar lebar gunakan dua kolom. Informasi tetap dapat dibaca ketika tema gelap diaktifkan.</p><h2>E. Langkah Praktikum</h2><h3>Langkah 1 — Buat model data dummy</h3><pre><code>class Agenda {
+}</code></pre></div><h3>I.2 StatefulWidget</h3><p>Gunakan ketika data lokal berubah karena tap, input, timer, animasi, atau proses sementara. Configuration tetap immutable; data berubah disimpan dalam objek <code>State</code>.</p><div class="mobile-code"><span class="filename">lib/pages/counter_page.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>class CounterPage extends StatefulWidget {
+  const CounterPage({super.key});
+  @override
+  State&lt;CounterPage&gt; createState() =&gt; _CounterPageState();
+}
+
+class _CounterPageState extends State&lt;CounterPage&gt; {
+  int counter = 0;
+
+  void tambah() {
+    setState(() {
+      counter++;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) =&gt; Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text('$counter', style: const TextStyle(fontSize: 40)),
+      ElevatedButton(onPressed: tambah, child: const Text('Tambah')),
+    ],
+  );
+}</code></pre></div><p><strong>Catatan:</strong> <code>counter++</code> mengubah variabel Dart, tetapi <code>setState()</code> memberi tahu Flutter bahwa UI perlu dibangun ulang.</p><table class="mobile-table"><thead><tr><th>Aspek</th><th>StatelessWidget</th><th>StatefulWidget</th></tr></thead><tbody><tr><td>State lokal berubah?</td><td>Tidak</td><td>Ya, pada objek State</td></tr><tr><td>Contoh</td><td>AgendaCard, judul, icon</td><td>Counter, filter, form lokal</td></tr><tr><td>setState()</td><td>Tidak</td><td>Ya untuk state lokal</td></tr><tr><td>Rebuild</td><td>Saat parent memberi konfigurasi baru</td><td>Saat parent rebuild atau setState dipanggil</td></tr></tbody></table><h3>I.3 Lifecycle StatefulWidget</h3><ol class="mobile-step-list"><li><code>createState()</code> membuat object State.</li><li><code>initState()</code> dipanggil sekali untuk controller atau listener.</li><li><code>build()</code> membaca state dan menghasilkan UI.</li><li><code>setState()</code> menandai perubahan state lokal.</li><li><code>dispose()</code> membersihkan controller, listener, dan resource.</li></ol><div class="mobile-callout"><strong>State milik siapa?</strong> Letakkan state sedekat mungkin dengan widget yang menggunakannya. Jika beberapa sibling membutuhkannya, naikkan ke parent terdekat. Data lintas halaman lebih tepat dikelola dengan state management.</div></section>
+<section id="praktik-state"><h2>J. Praktik 2 - Counter Jumlah Event</h2><p>Ubah counter menjadi jumlah peserta event. Buat tombol <code>[-]</code> dan <code>[+]</code>. Nilai tidak boleh kurang dari nol.</p><div class="mobile-code"><span class="filename">logika_counter.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>void kurang() {
+  if (counter &gt; 0) {
+    setState(() {
+      counter--;
+    });
+  }
+}</code></pre></div><p>Urutan: user action → method → state berubah → <code>setState()</code> → <code>build()</code> → UI baru.</p></section>
+<section id="layout"><h2>K. Memahami Layout Flutter</h2><p><code>Column</code> menyusun child vertikal dan <code>Row</code> menyusun child horizontal.</p><div class="mobile-code"><span class="filename">layout.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>Column(
+  children: [
+    const Text('Judul Event'),
+    const Text('12 Oktober 2026'),
+    ElevatedButton(onPressed: () {}, child: const Text('Detail')),
+  ],
+)
+
+Row(
+  children: [
+    const Icon(Icons.event),
+    const SizedBox(width: 8),
+    const Text('Workshop Flutter'),
+  ],
+)</code></pre></div><p>Pada <code>Row</code>, main axis horizontal. Pada <code>Column</code>, main axis vertikal. Coba <code>mainAxisAlignment.center</code> dan <code>crossAxisAlignment.start</code>, <code>center</code>, serta <code>end</code>.</p><h3>K.1 Expanded dan Flexible</h3><p>Text panjang dalam Row dapat menyebabkan <code>RIGHT OVERFLOWED BY XX PIXELS</code>. Gunakan ruang fleksibel.</p><div class="mobile-code"><span class="filename">row_aman.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>Row(
+  children: [
+    const Icon(Icons.event),
+    const SizedBox(width: 8),
+    Expanded(child: Text(longTitle)),
+    const Icon(Icons.arrow_forward),
+  ],
+)</code></pre></div><h3>K.2 Constraint</h3><p>Parent memberi batas, child memilih ukuran dalam batas tersebut, lalu parent menentukan posisi. Hindari terlalu banyak ukuran tetap seperti <code>width: 500</code> jika UI berjalan pada banyak layar.</p></section>
+<section id="agenda"><h2>L. Praktik 3 - Membuat AgendaCard</h2><p>Mulai gunakan studi kasus UNIMUGO Event dengan data dummy lokal.</p><div class="mobile-code"><span class="filename">lib/models/agenda.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>class Agenda {
   final String judul;
   final String kategori;
   final String tanggal;
 
-  const Agenda(this.judul, this.kategori, this.tanggal);
+  const Agenda({
+    required this.judul,
+    required this.kategori,
+    required this.tanggal,
+  });
 }
 
 const agenda = [
-  Agenda('Workshop Git untuk Proyek TI', 'Laboratorium', '12 Okt 2026'),
-  Agenda('Seminar Karier Teknologi', 'Program Studi', '19 Okt 2026'),
-];</code></pre><h3>Langkah 2 — Bangun kartu agenda</h3><p>Buat widget <code>AgendaCard</code> yang menerima objek <code>Agenda</code> dari parent. Gunakan <code>Card</code>, <code>Padding</code>, dan <code>Semantics</code> agar informasi memiliki label yang jelas.</p><h3>Langkah 3 — Atur layout responsif</h3><p>Gunakan <code>LayoutBuilder</code> untuk memilih jumlah kolom. Uji pada emulator ponsel dan ukuran tablet. Pastikan tidak ada overflow horizontal.</p><h3>Langkah 4 — Terapkan tema</h3><p>Definisikan <code>ColorScheme.fromSeed</code>, <code>theme</code>, dan <code>darkTheme</code> pada <code>MaterialApp</code>. Gunakan kontras yang memadai dan jangan menyampaikan status hanya melalui warna.</p><h2>F. Validasi Output</h2><ul class="checklist"><li>Tampilan satu kolom pada lebar layar ponsel.</li><li>Tampilan dua kolom pada layar tablet/desktop.</li><li>Teks kartu tidak terpotong dan tidak overflow.</li><li>Mode terang dan gelap tetap terbaca.</li></ul><h2>G. Eksperimen</h2><p>Ubah batas lebar dari 600 menjadi 720 dan tambahkan breakpoint tiga kolom. Bandingkan pengalaman membaca pada emulator yang berbeda. Tambahkan filter kategori tanpa mengubah data sumber.</p><h2>H. Tugas Praktikum</h2><p>Rancang halaman daftar kegiatan mahasiswa dengan minimal enam data dummy. Sertakan keadaan kosong ketika filter tidak menemukan agenda dan berikan label aksesibel pada tombol filter.</p><h2>I. Refleksi</h2><ol><li>Bagian mana yang termasuk konfigurasi dan mana yang termasuk state?</li><li>Mengapa ukuran tetap berisiko menyebabkan overflow?</li><li>Bagaimana Anda memeriksa aksesibilitas selain melihat warna?</li></ol><h2>Referensi</h2><ul><li><a href="https://docs.flutter.dev/ui/layout/responsive" target="_blank">Flutter — Building responsive apps</a></li><li><a href="https://docs.flutter.dev/ui/accessibility-and-internationalization/accessibility" target="_blank">Flutter — Accessibility</a></li></ul><div class="module-nav"><a href="../modul-01/index.html">← Modul 01</a><a href="../modul-03/index.html">Modul 03 →</a></div></main></div><script src="../../../assets/js/navigation.js"></script></body></html>
+  Agenda(judul: 'Workshop Git untuk Proyek TI', kategori: 'Laboratorium', tanggal: '12 Okt 2026'),
+  Agenda(judul: 'Seminar Karier Teknologi', kategori: 'Program Studi', tanggal: '19 Okt 2026'),
+  Agenda(judul: 'Pelatihan UI/UX', kategori: 'Himpunan Mahasiswa', tanggal: '25 Okt 2026'),
+];</code></pre></div><div class="mobile-code"><span class="filename">lib/widgets/agenda_card.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>class AgendaCard extends StatelessWidget {
+  const AgendaCard({super.key, required this.agenda});
+  final Agenda agenda;
+
+  @override
+  Widget build(BuildContext context) =&gt; Semantics(
+    label: '${agenda.judul}, ${agenda.kategori}, ${agenda.tanggal}',
+    child: Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(agenda.kategori, style: Theme.of(context).textTheme.labelMedium),
+            const SizedBox(height: 8),
+            Text(agenda.judul, style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 12),
+            Row(children: [const Icon(Icons.calendar_today, size: 16), const SizedBox(width: 8), Text(agenda.tanggal)]),
+          ],
+        ),
+      ),
+    ),
+  );
+}</code></pre></div><p>AgendaCard sengaja menjadi StatelessWidget: ia hanya menerima data dan merendernya. State filter atau pilihan kategori berada di parent.</p></section>
+<section id="list-grid"><h2>M. Menampilkan Banyak Data: List dan Grid</h2><div class="mobile-code"><span class="filename">list_builder.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>ListView.builder(
+  itemCount: agenda.length,
+  itemBuilder: (context, index) =&gt; AgendaCard(agenda: agenda[index]),
+)</code></pre></div><p>Hubungannya adalah list data → <code>itemCount</code> → index → <code>agenda[index]</code> → AgendaCard. Grid dipakai saat ruang horizontal cukup untuk beberapa kolom.</p></section>
+<section id="responsive"><h2>N. Responsive UI</h2><p>Jangan berpikir Android memiliki ukuran tertentu dan tablet memiliki ukuran tertentu. Tanyakan berapa ruang yang tersedia untuk UI. Gunakan <code>LayoutBuilder</code>.</p><div class="mobile-code"><span class="filename">responsive_grid.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>LayoutBuilder(
+  builder: (context, constraints) {
+    final width = constraints.maxWidth;
+    final columns = width &gt;= 720 ? 3 : width &gt;= 600 ? 2 : 1;
+
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: columns,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        childAspectRatio: 1.5,
+      ),
+      itemCount: agenda.length,
+      itemBuilder: (context, index) =&gt; AgendaCard(agenda: agenda[index]),
+    );
+  },
+)</code></pre></div><div class="mobile-file-tree">&lt; 600 px       → 1 kolom
+600-719 px   → 2 kolom
+≥ 720 px      → 3 kolom</div><h3>N.1 LayoutBuilder vs MediaQuery</h3><table class="mobile-table"><thead><tr><th>API</th><th>Informasi</th><th>Penggunaan</th></tr></thead><tbody><tr><td>MediaQuery</td><td>Ukuran window/screen secara umum</td><td>Orientasi, safe area, preferensi sistem</td></tr><tr><td>LayoutBuilder</td><td>Constraint yang diberikan parent</td><td>Responsive component berdasarkan ruang aktual</td></tr></tbody></table><p>Untuk komponen yang berada di panel sempit, <code>LayoutBuilder</code> sering lebih tepat daripada lebar layar global.</p></section>
+<section id="theme"><h2>O. Theme dan Dark Mode</h2><p>Gunakan satu sumber warna dan typography agar UI konsisten. Jangan hardcode warna yang sebenarnya bagian dari theme.</p><div class="mobile-code"><span class="filename">lib/theme/app_theme.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>final lightTheme = ThemeData(
+  colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+  useMaterial3: true,
+);
+
+final darkTheme = ThemeData(
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: Colors.green,
+    brightness: Brightness.dark,
+  ),
+  useMaterial3: true,
+);
+
+MaterialApp(
+  theme: lightTheme,
+  darkTheme: darkTheme,
+  themeMode: ThemeMode.system,
+  home: const EventPage(),
+)</code></pre></div><p>Di dalam widget gunakan <code>Theme.of(context).colorScheme.primary</code> atau style dari <code>textTheme</code>. Uji light dan dark mode: teks, background, icon, card, dan tombol harus tetap terbaca.</p></section>
+<section id="aksesibilitas"><h2>P. Accessibility Dasar</h2><p>Accessibility membuat UI dapat digunakan lebih banyak pengguna. Jangan menyampaikan informasi hanya melalui warna.</p><ul><li>Gunakan teks status, bukan hanya hijau/merah.</li><li>Gunakan label bermakna pada tombol dan elemen interaktif.</li><li>Gunakan ukuran teks yang nyaman; jangan mengecilkan font hanya agar semua muat.</li><li>Gunakan <code>Semantics</code> untuk informasi yang perlu dibaca screen reader.</li></ul><div class="mobile-code"><span class="filename">accessible_card.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>Semantics(
+  label: 'Workshop Git untuk Proyek Teknologi Informasi',
+  child: AgendaCard(agenda: agenda.first),
+)</code></pre></div></section>
+<section id="filter"><h2>Q. Praktik 4 - Filter Kategori dan Empty State</h2><p>Filter adalah state yang relevan dengan aplikasi. State pilihan kategori menyebabkan data difilter dan UI dibangun ulang.</p><div class="mobile-code"><span class="filename">filter_logic.dart</span><button class="copy-mobile-code" type="button">Salin</button><pre><code>String? selectedCategory;
+
+final filteredAgenda = selectedCategory == null
+    ? agenda
+    : agenda.where((item) =&gt; item.kategori == selectedCategory).toList();
+
+if (filteredAgenda.isEmpty) {
+  return const Center(child: Text('Belum ada agenda yang sesuai.'));
+}</code></pre></div><p>Minimal UI perlu memikirkan loading, success, empty, dan error meskipun data sekarang masih dummy. Jangan biarkan layar kosong tanpa penjelasan.</p></section>
+<section id="dashboard"><h2>R. Integrasi Akhir - Dashboard UNIMUGO Event</h2><p>Gabungkan semua konsep dalam satu halaman:</p><div class="mobile-file-tree">Scaffold
+├── AppBar
+└── Body
+    └── LayoutBuilder
+        ├── Header
+        ├── Filter kategori
+        └── GridView
+            ├── AgendaCard
+            ├── AgendaCard
+            └── AgendaCard</div><p>Target minimum: enam event, satu kolom smartphone, dua kolom tablet, tiga kolom layar lebar, light/dark mode, filter, empty state, Semantics, tanpa overflow, dan widget terpisah.</p></section>
+<section id="struktur"><h2>S. Struktur Folder</h2><p>Mulai biasakan mahasiswa tidak menaruh semuanya di <code>main.dart</code>.</p><div class="mobile-file-tree">lib/
+├── main.dart
+├── models/
+│   └── agenda.dart
+├── pages/
+│   └── event_page.dart
+├── widgets/
+│   ├── agenda_card.dart
+│   ├── category_filter.dart
+│   └── empty_state.dart
+└── theme/
+    └── app_theme.dart</div><p>Pemisahan ini membuat tanggung jawab lebih jelas, kode dapat digunakan ulang, dan pengujian lebih mudah.</p></section>
+<section id="debugging"><h2>T. Debugging Challenge</h2><ol class="mobile-step-list"><li><strong>Overflow:</strong> gunakan Row dengan icon, <code>Text(longTitle)</code>, dan icon panah. Jelaskan mengapa overflow terjadi lalu perbaiki menggunakan Expanded.</li><li><strong>State tidak berubah:</strong> ubah <code>counter++</code> tanpa <code>setState()</code>. Temukan mengapa UI tidak berubah.</li><li><strong>Responsive:</strong> ubah GridView dengan <code>crossAxisCount: 2</code> tetap menjadi LayoutBuilder dengan breakpoint.</li></ol></section>
+<section id="eksperimen"><h2>U. Eksperimen</h2><ol><li>Ubah breakpoint 600 menjadi 720 dan amati.</li><li>Tambahkan tiga kolom pada layar lebih lebar.</li><li>Ubah <code>childAspectRatio</code> menjadi 1.0, 1.5, dan 2.0.</li><li>Aktifkan dark mode dan temukan tiga masalah readability.</li><li>Hilangkan Expanded dari Row dan jelaskan penyebab overflow.</li></ol></section>
+<section id="tugas"><h2>V. Tugas Praktikum Mandiri</h2><h3>UNIMUGO Student Activity</h3><p>Buat halaman daftar kegiatan mahasiswa dengan ketentuan:</p><ul><li>minimal enam data dan tiga kategori;</li><li>satu kolom smartphone, dua tablet, tiga layar lebar;</li><li>light mode, dark mode, filter kategori, dan empty state;</li><li>Semantics, model data, widget terpisah, LayoutBuilder, tanpa overflow.</li></ul><p>Kategori dapat berupa Seminar, Workshop, Organisasi, Kompetisi, Pengabdian, dan Akademik.</p></section>
+<section id="persyaratan"><h2>W. Persyaratan Kode</h2><p>Aplikasi tidak boleh seluruhnya berada di <code>main.dart</code>. Minimal gunakan folder <code>models/</code>, <code>pages/</code>, <code>widgets/</code>, dan <code>theme/</code>. Wajib menggunakan StatelessWidget, StatefulWidget, Row, Column, Expanded, ListView/GridView, LayoutBuilder, Theme, dan Semantics.</p></section>
+<section id="checklist"><h2>X. Checklist Sebelum Dikumpulkan</h2><div class="mobile-checklist"><label><input type="checkbox" data-mobile-check> Saya memahami widget, widget tree, build(), dan declarative UI.</label><label><input type="checkbox" data-mobile-check> Saya dapat membedakan StatelessWidget dan StatefulWidget serta memakai setState().</label><label><input type="checkbox" data-mobile-check> Saya memahami Row, Column, Expanded, ListView, GridView, constraint, dan overflow.</label><label><input type="checkbox" data-mobile-check> Saya dapat membuat UI mobile, tablet, dan layar lebar dengan LayoutBuilder.</label><label><input type="checkbox" data-mobile-check> Saya menggunakan ColorScheme, light theme, dark theme, dan kontras yang baik.</label><label><input type="checkbox" data-mobile-check> Informasi memiliki label jelas dan tidak hanya dibedakan berdasarkan warna.</label></div></section>
+<section id="refleksi"><h2>Y. Pertanyaan Refleksi</h2><ol><li>Mengapa Flutter menggunakan widget sebagai dasar UI?</li><li>Apa perbedaan konseptual StatelessWidget dan StatefulWidget?</li><li>Jelaskan alur user action → state berubah → setState(
+
+)</code> → UI berubah.</li><li>Mengapa <code>width: 500</code> berisiko pada perangkat berbeda?</li><li>Apa perbedaan MediaQuery dan LayoutBuilder?</li><li>Mengapa Expanded membantu mencegah overflow?</li><li>Mengapa dark mode tidak cukup hanya mengganti background?</li><li>Mengapa accessibility dipikirkan sejak awal?</li><li>Mengapa empty state penting?</li><li>Apa yang berubah jika aplikasi memiliki 10.000 event dari API?</li></ol></section>
+<section id="lanjutan"><h2>Z. Tantangan Lanjutan</h2><p>Level 1: search event. Level 2: sort tanggal. Level 3: favorite event. Level 4: detail event. Level 5: pisahkan state menjadi model terstruktur. Jaga tanggung jawab UI → State → Data.</p></section>
+<section id="rubrik"><h2>AA. Rubrik Praktikum</h2><table class="mobile-table"><thead><tr><th>Aspek</th><th>Bobot</th></tr></thead><tbody><tr><td>Widget dan widget tree</td><td>15%</td></tr><tr><td>Stateless dan Stateful</td><td>15%</td></tr><tr><td>Layout dan Expanded</td><td>15%</td></tr><tr><td>Responsive UI</td><td>15%</td></tr><tr><td>State dan filtering</td><td>10%</td></tr><tr><td>Theme dan dark mode</td><td>10%</td></tr><tr><td>Accessibility</td><td>10%</td></tr><tr><td>Struktur kode</td><td>5%</td></tr><tr><td>Debugging dan eksperimen</td><td>5%</td></tr><tr><th>Total</th><th>100%</th></tr></tbody></table></section>
+<section id="konsep-akhir"><h2>AB. Konsep yang Harus Dipahami</h2><p>Sebelum meninggalkan modul, mahasiswa harus dapat menjelaskan tanpa melihat materi: Widget, Widget Tree, <code>build()</code>, State, kapan memakai StatefulWidget, fungsi <code>setState()</code>, Row/Column, Expanded, Constraint, Overflow, Responsive UI, LayoutBuilder, Theme, Dark Mode, dan Accessibility.</p></section>
+<section id="referensi"><h2>AC. Referensi</h2><ul><li><a href="https://docs.flutter.dev/ui/layout/responsive">Flutter - Layout dan responsive design</a></li><li><a href="https://docs.flutter.dev/ui/accessibility-and-internationalization/accessibility">Flutter - Accessibility</a></li><li><a href="https://docs.flutter.dev/ui/widgets">Flutter - Widget fundamentals</a></li><li><a href="https://docs.flutter.dev/data-and-backend/state-mgmt">Flutter - State management</a></li></ul></section>
+</main></div><script src="../../../assets/js/mobile-module-03.js"></script>
+</body></html>
